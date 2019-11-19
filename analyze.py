@@ -9,7 +9,9 @@ def find_vulnerability(slice_file,pattern_list):
 	slice_items = recursive(slice,[])
 	result(slice_items,pattern_list)
 
-
+# Função básica que percore todo o JSON e identifica a existência o contéudo que se encontra no pattern dentro do slice
+# Problema: demasiado básico e precisão péssima
+'''
 def recursive_old(slice,pattern_list):
 	for key,value in slice.items():
 		#print(str(key),'->',str(value))
@@ -27,8 +29,13 @@ def recursive_old(slice,pattern_list):
 				#print('sinks ',pattern.sinks)
 				if value in pattern.sinks or value in pattern.sources or value in pattern.sanitizers:
 					print('vulnerability ',value, ' DETECTED')
+'''
 
 
+# Função intermédia que percore todo o JSON e separa todas as leafs da tree, orientando-se através do col_offset,
+# cria uma lista de items que depois vai ser separada através do número de colunas para análise mais detalhado da função
+# Vantagem: Verifica pattern em cada leaf separadamente
+# Problema: Ainda não analisa todo o tipo de vulnerabilidades
 def recursive(slice,slice_items):
 	for key,value in slice.items():
 		#print(str(key),'->',str(value))
@@ -58,7 +65,8 @@ def result(slice_items,pattern_list):
 			#print('LEAF')
 			#print(leaf[:-2])
 
-			for current_leaf in leaf[:-2]:
+			for current_leaf in leaf[:-2]: 
+			#[:-2] porque o col_offset é após o ast_type, por isso é necessário remover da leaf atual e adicionar na próxima leaf
 				leaf_value = current_leaf[1]
 				#print(leaf_value)
 				#print('test',leaf[2:])
@@ -73,6 +81,7 @@ def result(slice_items,pattern_list):
 			leaf = [slice_items[i-1],items]
 		i=i+1
 
+# in_leaf verifica existência de patterns dentro da leaf especificamente
 def in_leaf(name,leaf):
 	for current_leaf in leaf:
 		if name == current_leaf[1]:
