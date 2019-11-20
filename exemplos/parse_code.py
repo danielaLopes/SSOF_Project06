@@ -1,6 +1,10 @@
 import ast
 import json
 from ast2json import ast2json
+import sys
 
-exemplo = ast2json(ast.parse(open('exemplo1.py').read()))
-print(json.dumps(exemplo, indent=4))
+parsed = ast2json(ast.parse(open(sys.argv[1]).read()))
+f = open(sys.argv[1]+".json", "a")
+f.write(json.dumps(parsed, indent=4))
+f.close()
+
