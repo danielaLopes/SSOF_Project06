@@ -12,15 +12,18 @@
                     "ctx": {
                         "_type": "Store"
                     },
-                    "id": "a",
+                    "id": "x",
                     "lineno": 1
                 }
             ],
             "value": {
-                "_type": "Num",
+                "_type": "Name",
                 "col_offset": 2,
-                "lineno": 1,
-                "n": 2
+                "ctx": {
+                    "_type": "Load"
+                },
+                "id": "a",
+                "lineno": 1
             }
         },
         {
@@ -34,18 +37,15 @@
                     "ctx": {
                         "_type": "Store"
                     },
-                    "id": "x",
+                    "id": "a",
                     "lineno": 2
                 }
             ],
             "value": {
-                "_type": "Name",
+                "_type": "Num",
                 "col_offset": 2,
-                "ctx": {
-                    "_type": "Load"
-                },
-                "id": "a",
-                "lineno": 2
+                "lineno": 2,
+                "n": 2
             }
         }
     ]

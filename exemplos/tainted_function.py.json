@@ -1,0 +1,58 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "Assign",
+            "col_offset": 0,
+            "lineno": 1,
+            "targets": [
+                {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Store"
+                    },
+                    "id": "x",
+                    "lineno": 1
+                }
+            ],
+            "value": {
+                "_type": "Num",
+                "col_offset": 4,
+                "lineno": 1,
+                "n": 2
+            }
+        },
+        {
+            "_type": "Expr",
+            "col_offset": 0,
+            "lineno": 2,
+            "value": {
+                "_type": "Call",
+                "args": [
+                    {
+                        "_type": "Name",
+                        "col_offset": 4,
+                        "ctx": {
+                            "_type": "Load"
+                        },
+                        "id": "x",
+                        "lineno": 2
+                    }
+                ],
+                "col_offset": 0,
+                "func": {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Load"
+                    },
+                    "id": "get",
+                    "lineno": 2
+                },
+                "keywords": [],
+                "lineno": 2
+            }
+        }
+    ]
+}
