@@ -5,9 +5,9 @@ import json
 class AstParser:
 
     def __init__(self):
-        self.type_string = ""
+        self.type_string = None
 
-    def parse(self, slice_file):
+    """def parse(self, slice_file):
         slice = json.load(slice_file)
         if "ast_type" in slice:
             self.type_string = "ast_type"
@@ -50,4 +50,59 @@ class AstParser:
 
         return slice_items
 
-    #def create_node(self, ):
+    #def create_node(self, ):"""
+
+    def parse(self, slice_file):
+        slice = json.load(slice_file)
+        # to enable both teacher's given ast and python's ast
+        if "ast_type" in slice:
+            self.type_string = "ast_type"
+        else:
+            self.type_string = "_type"
+        return self.parseAST(slice)
+
+    def parse_ast(self, slice):
+        return AST(self.parse_body(slice["body"]))
+
+    def parse_body(self, lst):
+        nodes = []
+        for dict in lst:
+            print(dict)
+            nodes.append(self.parse_body_node(dict[self.type_string]))
+        return Body(nodes)
+
+    def parse_body_node(self, node):
+        if node[self.type_string] == 'Assign':
+            return self.parse_assign(node['targets'], node['value'])
+        elif node[self.type_string] == 'If':
+            return self.parseIf()
+        elif node[self.type_string] == 'While':
+            return self.parseWhile()
+
+    def parse_assign(self, targets, value):
+        return Assign(self.parse_targets(targets), self.parse_expr(value))
+
+    def parse_if(self):
+        pass
+
+    def parse_while(self):
+        pass
+
+    def parse_targets(self, targets):
+        pass
+
+    def parse_expr(self, value):
+        if value[self.type_string] == 'Num':
+            return NumExpr(value['n'])
+        elif value[self.type_string] == 'Name':
+            return VarExpr(value['id'])
+        elif value[self.type_string] == 'Str':
+            return StrExpr(value['s'])
+        elif value[self.type_string] == 'Call':
+            return self.parse_func_call(value['args'], value['func'])
+
+    def parse_func_call(self, args, func):
+        argList = []
+        for arg in args:
+            argList.append(parseExpr(arg))
+        return FuncCall(argList, Func(func['id']))

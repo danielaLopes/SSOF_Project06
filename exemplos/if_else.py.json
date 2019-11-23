@@ -1,0 +1,177 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "Assign",
+            "col_offset": 0,
+            "lineno": 1,
+            "targets": [
+                {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Store"
+                    },
+                    "id": "a",
+                    "lineno": 1
+                }
+            ],
+            "value": {
+                "_type": "Num",
+                "col_offset": 4,
+                "lineno": 1,
+                "n": 2
+            }
+        },
+        {
+            "_type": "If",
+            "body": [
+                {
+                    "_type": "Assign",
+                    "col_offset": 4,
+                    "lineno": 3,
+                    "targets": [
+                        {
+                            "_type": "Name",
+                            "col_offset": 4,
+                            "ctx": {
+                                "_type": "Store"
+                            },
+                            "id": "b",
+                            "lineno": 3
+                        }
+                    ],
+                    "value": {
+                        "_type": "Num",
+                        "col_offset": 8,
+                        "lineno": 3,
+                        "n": 3
+                    }
+                }
+            ],
+            "col_offset": 0,
+            "lineno": 2,
+            "orelse": [
+                {
+                    "_type": "Assign",
+                    "col_offset": 4,
+                    "lineno": 5,
+                    "targets": [
+                        {
+                            "_type": "Name",
+                            "col_offset": 4,
+                            "ctx": {
+                                "_type": "Store"
+                            },
+                            "id": "b",
+                            "lineno": 5
+                        }
+                    ],
+                    "value": {
+                        "_type": "Num",
+                        "col_offset": 8,
+                        "lineno": 5,
+                        "n": 4
+                    }
+                }
+            ],
+            "test": {
+                "_type": "Name",
+                "col_offset": 3,
+                "ctx": {
+                    "_type": "Load"
+                },
+                "id": "a",
+                "lineno": 2
+            }
+        }
+    ]
+}{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "Assign",
+            "col_offset": 0,
+            "lineno": 1,
+            "targets": [
+                {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Store"
+                    },
+                    "id": "a",
+                    "lineno": 1
+                }
+            ],
+            "value": {
+                "_type": "Num",
+                "col_offset": 4,
+                "lineno": 1,
+                "n": 2
+            }
+        },
+        {
+            "_type": "If",
+            "body": [
+                {
+                    "_type": "Assign",
+                    "col_offset": 4,
+                    "lineno": 3,
+                    "targets": [
+                        {
+                            "_type": "Name",
+                            "col_offset": 4,
+                            "ctx": {
+                                "_type": "Store"
+                            },
+                            "id": "b",
+                            "lineno": 3
+                        }
+                    ],
+                    "value": {
+                        "_type": "Str",
+                        "col_offset": 8,
+                        "lineno": 3,
+                        "s": "ola"
+                    }
+                }
+            ],
+            "col_offset": 0,
+            "lineno": 2,
+            "orelse": [
+                {
+                    "_type": "Assign",
+                    "col_offset": 4,
+                    "lineno": 5,
+                    "targets": [
+                        {
+                            "_type": "Name",
+                            "col_offset": 4,
+                            "ctx": {
+                                "_type": "Store"
+                            },
+                            "id": "b",
+                            "lineno": 5
+                        }
+                    ],
+                    "value": {
+                        "_type": "Str",
+                        "col_offset": 8,
+                        "lineno": 5,
+                        "s": "adeus"
+                    }
+                }
+            ],
+            "test": {
+                "_type": "Name",
+                "col_offset": 3,
+                "ctx": {
+                    "_type": "Load"
+                },
+                "id": "a",
+                "lineno": 2
+            }
+        }
+    ]
+}

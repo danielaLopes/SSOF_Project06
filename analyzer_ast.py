@@ -1,4 +1,22 @@
-class Assign:
+class AST(object):
+    def __init__(self, body):
+        self.body = body
+
+    def get_analyzed(self, analyzer):
+        analyzer.analyze_ast(self)
+
+
+class Body(object):
+    def __init__(self, nodes):
+        # list of all the ast tree nodes
+        self.nodes = nodes
+
+
+class BodyNode(Body):
+    pass
+
+
+class Assign(BodyNode):
     def __init__(self, var, expr):
         self.var = var
         self.expr = expr
@@ -6,7 +24,7 @@ class Assign:
     def __repr__(self):
         return 'Assign(%s, %s)' % (self.var, self.expr)
 
-    def level(self, analyzer):
+    """def level(self, analyzer):
         if self.var.name not in analyzer.decl_vars:
             analyzer.decl_vars[self.var.name] = self.var.level(analyzer)
         else:
@@ -14,11 +32,33 @@ class Assign:
                 analyzer.decl_vars[self.var.name].append(self.expr.level(analyzer))
             else:
                 analyzer.decl_vars[self.var.name] = [self.expr.level(analyzer)]
-        return self.expr.level(analyzer)
+        return self.expr.level(analyzer)"""
+
+    """def analyze(self, analyzer):
+        label = {"kind": ast_type, "var": self.var, "explevel": self.expr.level()}
+        analyzer.analyze_illegal_flows(label)"""
+
+
+class If(BodyNode):
+    pass
+
+
+class While(BodyNode):
+    pass
+
+
+class Expr(BodyNode):
+    pass
+    """def __init__(self, value, sources):
+        self.value = value # value['n']
+        self.sources = sources
+
+    def __repr__(self):
+        return 'Expr(%s, %s)' % (self.type, self.value)
 
     def analyze(self, analyzer):
-        label = {"kind": ast_type, "var": self.var, "explevel": self.expr.level()}
-        analyzer.analyze_illegal_flows(label)
+        label = {"kind": ast_type, "var": self.name, "explevel": self.exp.level()}
+        analyzer.analyze_illegal_flows(label)"""
 
 
 class Func:
@@ -39,7 +79,8 @@ class Func:
             else:
                 return "NORMAL", pattern
 
-class FuncCall:
+
+class FuncCall(Expr):
     def __init__(self, args, func):
         self.args = args
         self.func = func
@@ -86,20 +127,7 @@ class FuncCall:
 #class Attribute:
 
 
-class Expr:
-    def __init__(self, value, sources):
-        self.value = value # value['n']
-        self.sources = sources
-
-    def __repr__(self):
-        return 'Expr(%s, %s)' % (self.type, self.value)
-
-    def analyze(self, analyzer):
-        label = {"kind": ast_type, "var": self.name, "explevel": self.exp.level()}
-        analyzer.analyze_illegal_flows(label)
-
-
-class VarExpr:
+class VarExpr(Expr):
     def __init__(self, name):
         self.name = name
 
@@ -113,12 +141,23 @@ class VarExpr:
             return "TAINTED"
 
 
-class NumExpr:
+class NumExpr(Expr):
     def __init__(self, n):
         self.n = n
 
     def __repr__(self):
         return 'NumExpr(%s)' % self.n
+
+    def level(self, analyzer):
+        return "UNTAINTED"
+
+
+class StrExpr(Expr):
+    def __init__(self, str):
+        self.str = str
+
+    def __repr__(self):
+        return 'StrExpr(%s)' % self.str
 
     def level(self, analyzer):
         return "UNTAINTED"
