@@ -1,0 +1,36 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "Expr",
+            "col_offset": 0,
+            "lineno": 1,
+            "value": {
+                "_type": "Call",
+                "args": [
+                    {
+                        "_type": "Name",
+                        "col_offset": 7,
+                        "ctx": {
+                            "_type": "Load"
+                        },
+                        "id": "VARIAVEL",
+                        "lineno": 1
+                    }
+                ],
+                "col_offset": 0,
+                "func": {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Load"
+                    },
+                    "id": "FUNCAO",
+                    "lineno": 1
+                },
+                "keywords": [],
+                "lineno": 1
+            }
+        }
+    ]
+}

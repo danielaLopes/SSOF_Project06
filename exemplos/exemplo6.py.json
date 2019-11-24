@@ -1,0 +1,62 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "Expr",
+            "col_offset": 0,
+            "lineno": 1,
+            "value": {
+                "_type": "Call",
+                "args": [
+                    {
+                        "_type": "Call",
+                        "args": [
+                            {
+                                "_type": "Name",
+                                "col_offset": 24,
+                                "ctx": {
+                                    "_type": "Load"
+                                },
+                                "id": "VARIAVEL",
+                                "lineno": 1
+                            }
+                        ],
+                        "col_offset": 7,
+                        "func": {
+                            "_type": "Attribute",
+                            "attr": "ATRIBUTO",
+                            "col_offset": 7,
+                            "ctx": {
+                                "_type": "Load"
+                            },
+                            "lineno": 1,
+                            "value": {
+                                "_type": "Name",
+                                "col_offset": 7,
+                                "ctx": {
+                                    "_type": "Load"
+                                },
+                                "id": "OBJECTO",
+                                "lineno": 1
+                            }
+                        },
+                        "keywords": [],
+                        "lineno": 1
+                    }
+                ],
+                "col_offset": 0,
+                "func": {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Load"
+                    },
+                    "id": "FUNCAO",
+                    "lineno": 1
+                },
+                "keywords": [],
+                "lineno": 1
+            }
+        }
+    ]
+}

@@ -1,0 +1,63 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "Expr",
+            "col_offset": 0,
+            "lineno": 1,
+            "value": {
+                "_type": "Call",
+                "args": [
+                    {
+                        "_type": "Name",
+                        "col_offset": 17,
+                        "ctx": {
+                            "_type": "Load"
+                        },
+                        "id": "VARIAVEL1",
+                        "lineno": 1
+                    },
+                    {
+                        "_type": "Name",
+                        "col_offset": 27,
+                        "ctx": {
+                            "_type": "Load"
+                        },
+                        "id": "VARIAVEL2",
+                        "lineno": 1
+                    },
+                    {
+                        "_type": "Name",
+                        "col_offset": 37,
+                        "ctx": {
+                            "_type": "Load"
+                        },
+                        "id": "VARIAVEL3",
+                        "lineno": 1
+                    }
+                ],
+                "col_offset": 0,
+                "func": {
+                    "_type": "Attribute",
+                    "attr": "ATRIBUTO",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Load"
+                    },
+                    "lineno": 1,
+                    "value": {
+                        "_type": "Name",
+                        "col_offset": 0,
+                        "ctx": {
+                            "_type": "Load"
+                        },
+                        "id": "OBJECTO",
+                        "lineno": 1
+                    }
+                },
+                "keywords": [],
+                "lineno": 1
+            }
+        }
+    ]
+}

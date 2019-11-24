@@ -1,0 +1,112 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "Assign",
+            "col_offset": 0,
+            "lineno": 1,
+            "targets": [
+                {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Store"
+                    },
+                    "id": "uname",
+                    "lineno": 1
+                }
+            ],
+            "value": {
+                "_type": "Call",
+                "args": [
+                    {
+                        "_type": "Name",
+                        "col_offset": 23,
+                        "ctx": {
+                            "_type": "Load"
+                        },
+                        "id": "request",
+                        "lineno": 1
+                    }
+                ],
+                "col_offset": 8,
+                "func": {
+                    "_type": "Name",
+                    "col_offset": 8,
+                    "ctx": {
+                        "_type": "Load"
+                    },
+                    "id": "retrieve_uname",
+                    "lineno": 1
+                },
+                "keywords": [],
+                "lineno": 1
+            }
+        },
+        {
+            "_type": "Assign",
+            "col_offset": 0,
+            "lineno": 2,
+            "targets": [
+                {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Store"
+                    },
+                    "id": "q",
+                    "lineno": 2
+                }
+            ],
+            "value": {
+                "_type": "Call",
+                "args": [
+                    {
+                        "_type": "BinOp",
+                        "col_offset": 19,
+                        "left": {
+                            "_type": "Str",
+                            "col_offset": 19,
+                            "lineno": 2,
+                            "s": "SELECT pass FROM users WHERE user='%s'"
+                        },
+                        "lineno": 2,
+                        "op": {
+                            "_type": "Mod"
+                        },
+                        "right": {
+                            "_type": "Name",
+                            "col_offset": 62,
+                            "ctx": {
+                                "_type": "Load"
+                            },
+                            "id": "uname",
+                            "lineno": 2
+                        }
+                    }
+                ],
+                "col_offset": 4,
+                "func": {
+                    "_type": "Attribute",
+                    "attr": "execute",
+                    "col_offset": 4,
+                    "ctx": {
+                        "_type": "Load"
+                    },
+                    "lineno": 2,
+                    "value": {
+                        "_type": "Name",
+                        "col_offset": 4,
+                        "ctx": {
+                            "_type": "Load"
+                        },
+                        "id": "cursor",
+                        "lineno": 2
+                    }
+                },
+                "keywords": [],
+                "lineno": 2
+            }
+        }
+    ]
+}
