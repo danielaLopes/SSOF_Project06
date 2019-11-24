@@ -1,9 +1,9 @@
+#!/usr/bin/python3
 from analyzer_ast import *
 import json
 
 
 class AstParser:
-
     def __init__(self):
         self.type_string = None
 
@@ -27,8 +27,6 @@ class AstParser:
 
     def parse_body_node(self, node):
         if node[self.type_string] == 'Assign':
-            # TODO TEMPORARY if we can to enable a,b = 3, we need to change this,
-            # for now we only need to enable a = 3
             return self.parse_assign(node['targets'], node['value'])
         elif node[self.type_string] == 'Expr':
             return self.parse_expr(node['value'])
