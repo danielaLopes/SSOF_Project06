@@ -1,4 +1,6 @@
 from analyzer_ast import *
+from Levels import *
+
 
 class Analyzer:
 
@@ -9,33 +11,40 @@ class Analyzer:
         # output vulnerabilities are constructed during ast parsing with analyzer
         self.vulnerabilities = []
 
-    #def analyze_illegal_flows(self, label):
-    #    pass
+    def add_vulnerability(self, vulnerability, sources, sink):
+        self.vulnerabilities.append({"vulnerability": vulnerability,
+                                     "sources": sources,
+                                     "sink": sink})
 
     def analyze_ast(self, ast):
-        self.analyze_body(ast.body)
+        print("analyze_ast")
+        ast.body.get_analyzed(self)
+        #self.analyze_body(ast.body)
 
     def analyze_body(self, body):
+        print("analyze_body: {}".format(body))
         for node in body.nodes:
-            self.analyze_body_node(node)
+            node.get_analyzed(self)
 
     def analyze_body_node(self, node):
-        if isinstance(node, Assign):
-            self.analyze_assign(node)
-        elif isinstance(node, If):
-            self.analyze_if(node)
-        elif isinstance(node, While):
-            self.analyze_while(node)
+        print("analyze_body_node: {}".format(node))
+        node.get_analyzed(self)
 
     def analyze_assign(self, assign):
-        if assign.var.name not in self.decl_vars:
-            self.decl_vars[self.var.name] = self.analyze_var_expr(assign.var)
-        else:
-            if type(self.decl_vars[assign.var.name]) == type(list()):
-                self.decl_vars[assign.var.name].append(self.analyze_var_expr(assign.expr))
+        print("analyze_assign: {}".format(assign))
+        expr_level = assign.expr.get_analyzed(self)
+        for var in assign.vars:
+            if var.name in self.decl_vars:
+                # variable only gets sanitized if it was tainted before
+                if isinstance(expr_level, Sanitized):
+                    expr_level.source = var.name
+                    if isinstance(self.decl_vars[var.name], Tainted):
+                        self.decl_vars[var.name] = expr_level
+                    elif isinstance(self.decl_vars[var.name], Sanitized):
+                        self.decl_vars[var.name].sanitizers.extend(expr_level.sanitizers)
             else:
-                self.decl_vars[assign.var.name] = [self.analyze_var_expr(assign.expr)]
-        return self.analyze_var_expr(assign.var)
+                self.decl_vars[var.name] = expr_level
+        return expr_level
 
     def analyze_if(self, if_stmnt):
         pass
@@ -44,60 +53,88 @@ class Analyzer:
         pass
 
     def analyze_expr(self, expr):
-        if isinstance(node, NumExpr):
-            self.analyze_num_expr(node)
-        elif isinstance(node, VarExpr):
-            self.analyze_var_expr(node)
-        elif isinstance(node, StrExpr):
-            self.analyze_str_expr(node)
-        elif isinstance(node, FuncCall):
-            self.analyze_func_call(node)
+        print("analyze_expr: {}".format(expr))
+        if isinstance(expr, NumExpr):
+            self.analyze_num_expr(expr)
+        elif isinstance(expr, VarExpr):
+            self.analyze_var_expr(expr)
+        elif isinstance(expr, StrExpr):
+            self.analyze_str_expr(expr)
+        elif isinstance(expr, FuncCall):
+            self.analyze_func_call(expr)
 
     def analyze_func(self, func):
-        pass
+        print("analyze_func: {}".format(func))
+        normal_kind = None
+        for pattern in self.patterns:
+            #print("pattern {}".format(pattern.sources))
+            if func.name in pattern.sources:
+                return "SOURCE", pattern
+            elif func.name in pattern.sanitizers:
+                print("sanitizer {}".format(func.name))
+                return "SANITIZER", pattern
+            elif func.name in pattern.sinks:
+                return "SINK", pattern
+            else:
+                normal_kind = "NORMAL", None
+
+        return normal_kind
 
     def analyze_func_call(self, func_call):
-        kindTuple = self.func.kind(analyzer)
+        print("analyze_func_call: {}".format(func_call))
+        kindTuple = func_call.func.get_analyzed(self)
+        print("kindTuple: {}".format(kindTuple))
         kind = kindTuple[0]
         pattern = kindTuple[1]
         if kind == "SOURCE":
-            return "TAINTED"
+            print("IS A SOURCE: {}".format(func_call.func.name))
+            return Tainted(func_call.func.name)
 
         elif kind == "SANITIZER":
-            return self.func.name
+            print("IS A SANITIZER: {}".format(func_call.func.name))
+            return Sanitized([{'vulnerability': pattern.vulnerability,\
+                               'sanitizers': [func_call.func.name]}], None)
 
         else:
+            print("IS ANOTHER KIND: {}".format(func_call.func.name))
             sanitizers = []
-            funcLevel = ""
-            for arg in self.args:
-                level = arg.level(analyzer)
-                if type(level) == type(list()):
-                    sanitizers.extend(level)
-                else:
-                    if level == "TAINTED":
-                        funcLevel = "TAINTED"
+            sources = []
+            is_tainted = None
+            for arg in func_call.args:
+                level = arg.get_analyzed(self)
+                level_sanitizers = level.get_sanitizers(pattern.vulnerability)
+                if not isinstance(level, Untainted):
+                    if isinstance(level, Tainted):
+                        is_tainted = level
+                    if isinstance(arg, VarExpr):
+                        sources.append({'name': arg.name, 'sanitizers': level_sanitizers})
+                    elif isinstance(arg, FuncCall):
+                        sources.append({'name': arg.func.name, 'sanitizers': level_sanitizers})
+                    sanitizers.extend(level_sanitizers)
 
             if kind == "SINK":
-                analyzer.vulnerabilities.append({"vulnerability": pattern.vulnerability,
-                                                 "source": "",
-                                                 "sink": self.func.name,
-                                                 "sanitizer": sanitizers})
+                print("IS A SINK: {}".format(func_call.func.name))
+                self.add_vulnerability(pattern.vulnerability, sources, func_call.func.name)
 
-        if len(sanitizers) == 0:
-            if funcLevel == "TAINTED":
-                return "TAINTED"
-            else:
-                return "UNTAINTED"
+        if is_tainted:
+            return is_tainted
+        elif len(sources) > 0:
+            return Sanitized(sanitizers, None)
         else:
-            return sanitizers
+            return Untainted()
 
     def analyze_var_expr(self, expr):
-        pass
+        print("analyze_var_expr: {}".format(expr))
+        # check whether variable is declared
+        if expr.name in self.decl_vars:
+            return self.decl_vars[expr.name]
+        else:
+            return Tainted(expr.name)
 
     def analyze_num_expr(self, expr):
-        pass
-
-    def analyze_num_expr(self, expr):
-        pass
+        print("analyze_num_expr: {}".format(expr))
+        return Untainted()
 
     def analyze_str_expr(self, expr):
+        print("analyze_str_expr: {}".format(expr))
+        return Untainted()
