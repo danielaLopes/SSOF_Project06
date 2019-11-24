@@ -52,11 +52,29 @@ class Assign(BodyNode):
         return analyzer.analyze_assign(self)
 
 class If(BodyNode):
-    pass
+    def __init__(self, body, orelse, test):
+        self.body = body
+        self.orelse = orelse
+        self.test = test
+
+    def __repr__(self):
+        return 'If(%s, %s, %s)' % (self.body, self.orelse ,self.test)
+
+    def get_analyzed(self, analyzer):
+        return analyzer.analyze_if(self)
 
 
 class While(BodyNode):
-    pass
+    def __init__(self, body, orelse, test):
+        self.body = body
+        self.orelse = orelse
+        self.test = test
+
+    def __repr__(self):
+        return 'While(%s, %s, %s)' % (self.body, self.orelse ,self.test)
+
+    def get_analyzed(self, analyzer):
+        return analyzer.analyze_while(self)
 
 
 class Expr(BodyNode):
