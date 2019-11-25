@@ -39,10 +39,21 @@ class Analyzer:
         return expr_level
 
     def analyze_if(self, if_stmnt):
-        pass
+        for node in if_stmnt.body:
+            node.get_analyzed(self)
+        for node in if_stmnt.orelse:
+            node.get_analyzed(self)
+        for node in if_stmnt.test:
+            node.get_analyzed(self)
+
 
     def analyze_while(self, while_stmnt):
-        pass
+        for node in while_stmnt.body:
+            node.get_analyzed(self)
+        for node in while_stmnt.orelse:
+            node.get_analyzed(self)
+        for node in while_stmnt.test:
+            node.get_analyzed(self)
 
     def analyze_func(self, func):
         normal_kind = None
