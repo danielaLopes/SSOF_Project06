@@ -1,0 +1,102 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "Assign",
+            "col_offset": 0,
+            "lineno": 1,
+            "targets": [
+                {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Store"
+                    },
+                    "id": "a",
+                    "lineno": 1
+                }
+            ],
+            "value": {
+                "_type": "Name",
+                "col_offset": 4,
+                "ctx": {
+                    "_type": "Load"
+                },
+                "id": "c",
+                "lineno": 1
+            }
+        },
+        {
+            "_type": "If",
+            "body": [
+                {
+                    "_type": "Assign",
+                    "col_offset": 4,
+                    "lineno": 3,
+                    "targets": [
+                        {
+                            "_type": "Name",
+                            "col_offset": 4,
+                            "ctx": {
+                                "_type": "Store"
+                            },
+                            "id": "b",
+                            "lineno": 3
+                        }
+                    ],
+                    "value": {
+                        "_type": "Call",
+                        "args": [],
+                        "col_offset": 8,
+                        "func": {
+                            "_type": "Name",
+                            "col_offset": 8,
+                            "ctx": {
+                                "_type": "Load"
+                            },
+                            "id": "get",
+                            "lineno": 3
+                        },
+                        "keywords": [],
+                        "lineno": 3
+                    }
+                }
+            ],
+            "col_offset": 0,
+            "lineno": 2,
+            "orelse": [
+                {
+                    "_type": "Assign",
+                    "col_offset": 4,
+                    "lineno": 5,
+                    "targets": [
+                        {
+                            "_type": "Name",
+                            "col_offset": 4,
+                            "ctx": {
+                                "_type": "Store"
+                            },
+                            "id": "b",
+                            "lineno": 5
+                        }
+                    ],
+                    "value": {
+                        "_type": "Str",
+                        "col_offset": 8,
+                        "lineno": 5,
+                        "s": "adeus"
+                    }
+                }
+            ],
+            "test": {
+                "_type": "Name",
+                "col_offset": 3,
+                "ctx": {
+                    "_type": "Load"
+                },
+                "id": "a",
+                "lineno": 2
+            }
+        }
+    ]
+}

@@ -12,6 +12,18 @@ class Analyzer:
         self.basic_vulnerabilities = []
         self.advanced_vulnerabilities = []
 
+    def get_pattern_by_vuln(self, vulnerability):
+        for pattern in self.patterns:
+            if pattern.vulnerability == vulnerability:
+                return pattern
+
+    def get_sanitizers_per_vuln(self, vulnerability, sanitizers):
+        sanitizers_per_vuln = []
+        for sanitizer in sanitizers:
+            if sanitizer in self.get_pattern_by_vuln(vulnerability).sanitizers:
+                sanitizers_per_vuln.append(sanitizer)
+        return sanitizers_per_vuln
+
     def add_vulnerability_basic(self, vulnerability, sources, sink, sanitizers):
         self.basic_vulnerabilities.append({"vulnerability": vulnerability,
                                            "sources": sources,
@@ -38,9 +50,10 @@ class Analyzer:
                 if isinstance(expr_level, Sanitized):
                     expr_level.source = var.name
                     if isinstance(self.decl_vars[var.name], Tainted):
+                        expr_level.source = self.decl_vars[var.name].source
                         self.decl_vars[var.name] = expr_level
                     elif isinstance(self.decl_vars[var.name], Sanitized):
-                        self.decl_vars[var.name].add_sanitizer(expr_level)
+                        self.decl_vars[var.name].sanitizers.extend(expr_level.sanitizers)
             else:
                 self.decl_vars[var.name] = expr_level
         return expr_level
@@ -110,26 +123,32 @@ class Analyzer:
             return Tainted(func_call.func.name)
 
         elif kind == "SANITIZER":
-            return Sanitized({pattern.vulnerability: [func_call.func.name]}, None)
+            return Sanitized([func_call.func.name], None)
 
         else:
             sanitizers = []
             sources_basic = []
             sources_advanced = []
             is_tainted = None
+
             for arg in func_call.args:
-                level = arg.get_analyzed(self)
-                level_sanitizers = level.get_sanitizers(pattern.vulnerability)
-                if not isinstance(level, Untainted):
-                    if isinstance(level, Tainted):
-                        is_tainted = level
+                arg_level = arg.get_analyzed(self)
+
+                if kind == "SINK":
+                    arg_sanitizers = self.get_sanitizers_per_vuln(pattern.vulnerability, arg_level.sanitizers)
+                else:
+                    arg_sanitizers = arg_level.sanitizers
+
+                if not isinstance(arg_level, Untainted):
+                    if isinstance(arg_level, Tainted):
+                        is_tainted = arg_level
                     if isinstance(arg, VarExpr):
                         sources_basic.append(arg.name)
-                        sources_advanced.append({'name': arg.name, 'sanitizers': level_sanitizers})
+                        sources_advanced.append({'name': arg.name, 'sanitizers': arg_sanitizers})
                     elif isinstance(arg, FuncCall):
                         sources_basic.append(arg.func.name)
-                        sources_advanced.append({'name': arg.func.name, 'sanitizers': level_sanitizers})
-                    sanitizers.extend(level_sanitizers)
+                        sources_advanced.append({'name': arg.func.name, 'sanitizers': arg_sanitizers})
+                    sanitizers.extend(arg_sanitizers)
 
             if kind == "SINK":
                 self.add_vulnerability_basic(pattern.vulnerability, sources_basic, func_call.func.name, sanitizers)
@@ -155,3 +174,16 @@ class Analyzer:
 
     def analyze_str_expr(self, expr):
         return Untainted()
+
+    def analyze_bin_op(self, expr):
+        left_level = expr.left.get_analyzed(self)
+        right_level = expr.right.get_analyzed(self)
+        return maxLevel(left_level, right_level)
+
+    def analyze_bool_op(self, expr):
+        left_level = expr.left.get_analyzed(self)
+        comparator_level = expr.comparator.get_analyzed(self)
+        return maxLevel(left_level, comparator_level)
+
+    def analyze_unary_op(self, expr):
+        return expr.operand.get_analyzed(self)

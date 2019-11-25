@@ -1,0 +1,134 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "Assign",
+            "col_offset": 0,
+            "lineno": 1,
+            "targets": [
+                {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Store"
+                    },
+                    "id": "a",
+                    "lineno": 1
+                }
+            ],
+            "value": {
+                "_type": "Name",
+                "col_offset": 4,
+                "ctx": {
+                    "_type": "Load"
+                },
+                "id": "c",
+                "lineno": 1
+            }
+        },
+        {
+            "_type": "Assign",
+            "col_offset": 0,
+            "lineno": 2,
+            "targets": [
+                {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Store"
+                    },
+                    "id": "a",
+                    "lineno": 2
+                }
+            ],
+            "value": {
+                "_type": "Call",
+                "args": [],
+                "col_offset": 4,
+                "func": {
+                    "_type": "Name",
+                    "col_offset": 4,
+                    "ctx": {
+                        "_type": "Load"
+                    },
+                    "id": "mogrify",
+                    "lineno": 2
+                },
+                "keywords": [],
+                "lineno": 2
+            }
+        },
+        {
+            "_type": "If",
+            "body": [
+                {
+                    "_type": "Assign",
+                    "col_offset": 4,
+                    "lineno": 4,
+                    "targets": [
+                        {
+                            "_type": "Name",
+                            "col_offset": 4,
+                            "ctx": {
+                                "_type": "Store"
+                            },
+                            "id": "b",
+                            "lineno": 4
+                        }
+                    ],
+                    "value": {
+                        "_type": "Str",
+                        "col_offset": 8,
+                        "lineno": 4,
+                        "s": "ola"
+                    }
+                }
+            ],
+            "col_offset": 0,
+            "lineno": 3,
+            "orelse": [
+                {
+                    "_type": "Assign",
+                    "col_offset": 4,
+                    "lineno": 6,
+                    "targets": [
+                        {
+                            "_type": "Name",
+                            "col_offset": 4,
+                            "ctx": {
+                                "_type": "Store"
+                            },
+                            "id": "b",
+                            "lineno": 6
+                        }
+                    ],
+                    "value": {
+                        "_type": "Call",
+                        "args": [],
+                        "col_offset": 8,
+                        "func": {
+                            "_type": "Name",
+                            "col_offset": 8,
+                            "ctx": {
+                                "_type": "Load"
+                            },
+                            "id": "get",
+                            "lineno": 6
+                        },
+                        "keywords": [],
+                        "lineno": 6
+                    }
+                }
+            ],
+            "test": {
+                "_type": "Name",
+                "col_offset": 3,
+                "ctx": {
+                    "_type": "Load"
+                },
+                "id": "a",
+                "lineno": 3
+            }
+        }
+    ]
+}

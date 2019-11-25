@@ -125,3 +125,39 @@ class StrExpr(Expr):
 
     def get_analyzed(self, analyzer):
         return analyzer.analyze_str_expr(self)
+
+
+class BinOp(Expr):
+    def __init__(self, left, right):
+        self.left = left
+        self.right = right
+
+    def __repr__(self):
+        return 'BinOp(%s, %s)' % (self.left, self.right)
+
+    def get_analyzed(self, analyzer):
+        return analyzer.analyze_bin_op(self)
+
+
+class BoolOp(Expr):
+    def __init__(self, left, comparator):
+        self.left = left
+        self.comparator = comparator
+
+    def __repr__(self):
+        return 'BoolOp(%s, %s)' % (self.left, self.comparator)
+
+    def get_analyzed(self, analyzer):
+        return analyzer.analyze_bool_op(self)
+
+
+class UnaryOp(Expr):
+    def __init__(self, operand):
+        self.operand = operand
+
+    def __repr__(self):
+        return 'UnaryOp(%s)' % self.operand
+
+    def get_analyzed(self, analyzer):
+        return analyzer.analyze_unary_op(self)
+

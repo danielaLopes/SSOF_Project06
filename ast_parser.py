@@ -77,6 +77,12 @@ class AstParser:
             return StrExpr(value['s'])
         elif value[self.type_string] == 'Call':
             return self.parse_func_call(value['args'], value['func'])
+        elif value[self.type_string] == 'BinOp':
+            return self.parse_bin_op(value['left'], value['right'])
+        elif value[self.type_string] == 'BoolOp':
+            return self.parse_bool_op(value['values'][0], value['values'][1])
+        elif value[self.type_string] == 'UnaryOp':
+            return self.parse_unary_op(value['operand'])
 
     def parse_var_expr(self, id):
         return VarExpr(id)
@@ -86,3 +92,17 @@ class AstParser:
         for arg in args:
             argList.append(self.parse_expr(arg))
         return FuncCall(argList, Func(func['id']))
+
+    def parse_bin_op(self, left, right):
+        left_node = self.parse_expr(left)
+        right_node = self.parse_expr(right)
+        return BinOp(left_node, right_node)
+
+    def parse_bool_op(self, left, comparator):
+        left_node = self.parse_expr(left)
+        comparator_node = self.parse_expr(comparator)
+        return BoolOp(left_node, comparator_node)
+
+    def parse_unary_op(self, operand):
+        operand_node = self.parse_expr(operand)
+        return BinOp(operand_node)
