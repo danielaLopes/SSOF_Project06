@@ -59,21 +59,47 @@ class Analyzer:
         return expr_level
 
     def analyze_if(self, if_stmnt):
+        test_level = if_stmnt.test[0].get_analyzed(self)
+
         for node in if_stmnt.body:
-            node.get_analyzed(self)
+            if isinstance(node,Assign):
+                for var in node.vars:
+                    if var.name in self.decl_vars:
+                        if isinstance(test_level, Tainted):
+                            self.decl_vars[var.name] = test_level
+                        elif isinstance(test_level, Sanitized) and isinstance(self.decl_vars[var.name], Untainted):
+                            self.decl_vars[var.name] = test_level
         for node in if_stmnt.orelse:
-            node.get_analyzed(self)
-        for node in if_stmnt.test:
-            node.get_analyzed(self)
+            if isinstance(node,Assign):
+                for var in node.vars:
+                    if var.name in self.decl_vars:
+                        if isinstance(test_level, Tainted):
+                            self.decl_vars[var.name] = test_level
+                        elif isinstance(test_level, Sanitized) and isinstance(self.decl_vars[var.name], Untainted):
+                            self.decl_vars[var.name] = test_level
 
 
     def analyze_while(self, while_stmnt):
+        test_level = while_stmnt.test[0].get_analyzed(self)
+
         for node in while_stmnt.body:
-            node.get_analyzed(self)
+            node_level = node.get_analyzed(self)
+            if isinstance(node,Assign):
+                for var in node.vars:
+                    if var.name in self.decl_vars:
+                        if isinstance(test_level, Tainted):
+                            self.decl_vars[var.name] = test_level
+                        elif sinstance(test_level, Sanitized) and isinstance(node_level, Untainted):
+                            self.decl_vars[var.name] = test_level
         for node in while_stmnt.orelse:
-            node.get_analyzed(self)
-        for node in while_stmnt.test:
-            node.get_analyzed(self)
+            nnode_level = node.get_analyzed(self)
+            if isinstance(node,Assign):
+                for var in node.vars:
+                    if var.name in self.decl_vars:
+                        if isinstance(test_level, Tainted):
+                            self.decl_vars[var.name] = test_level
+                        elif isinstance(test_level, Sanitized) and isinstance(node_level, Untainted):
+                            self.decl_vars[var.name] = test_level
 
     def analyze_func(self, func):
         normal_kind = None

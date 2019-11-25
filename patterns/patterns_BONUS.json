@@ -1,0 +1,11 @@
+[
+    {"vulnerability": "Path Traversal",
+    "sources": ["get", "get_object_or_404", "ContactMailForm", "ChatMessageForm", "copy"],
+    "sanitizers": ["basename", "secure_filename"],
+    "sinks": ["send_from_directory", "send_file"]},
+  
+    {"vulnerability":"Command Injection",
+    "sources":["get", "get_object_or_404", "ContactMailForm", "ChatMessageForm", "copy"],
+    "sanitizers":["Popen"],
+    "sinks":["call", "check_call", "check_output", "system", "spawn", "popen"]},
+]
