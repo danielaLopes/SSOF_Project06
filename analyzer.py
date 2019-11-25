@@ -47,7 +47,6 @@ class Analyzer:
 
     def analyze_if(self, if_stmnt):
         test_level = if_stmnt.test[0].get_analyzed(self)
-        print('IF_BODY LEVEL: ',test_level)
 
         for node in if_stmnt.body:
             if isinstance(node,Assign):
@@ -69,23 +68,24 @@ class Analyzer:
 
     def analyze_while(self, while_stmnt):
         test_level = while_stmnt.test[0].get_analyzed(self)
-        print('IF_BODY LEVEL: ',test_level)
 
         for node in while_stmnt.body:
+            node_level = node.get_analyzed(self)
             if isinstance(node,Assign):
                 for var in node.vars:
                     if var.name in self.decl_vars:
                         if isinstance(test_level, Tainted):
                             self.decl_vars[var.name] = test_level
-                        elif sinstance(test_level, Sanitized) and isinstance(self.decl_vars[var.name], Untainted):
+                        elif sinstance(test_level, Sanitized) and isinstance(node_level, Untainted):
                             self.decl_vars[var.name] = test_level
         for node in while_stmnt.orelse:
+            nnode_level = node.get_analyzed(self)
             if isinstance(node,Assign):
                 for var in node.vars:
                     if var.name in self.decl_vars:
                         if isinstance(test_level, Tainted):
                             self.decl_vars[var.name] = test_level
-                        elif isinstance(test_level, Sanitized) and isinstance(self.decl_vars[var.name], Untainted):
+                        elif isinstance(test_level, Sanitized) and isinstance(node_level, Untainted):
                             self.decl_vars[var.name] = test_level
 
     def analyze_func(self, func):
