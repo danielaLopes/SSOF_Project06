@@ -43,6 +43,7 @@ class Analyzer:
             node.get_analyzed(self)
 
     def analyze_assign(self, assign):
+        print("analyzing assign {}".format(assign))
         expr_level = assign.expr.get_analyzed(self)
         for var in assign.vars:
             if var.name in self.decl_vars:
@@ -56,26 +57,33 @@ class Analyzer:
                         self.decl_vars[var.name].sanitizers.extend(expr_level.sanitizers)
             else:
                 self.decl_vars[var.name] = expr_level
+        print("expr_level in assign {}".format(expr_level))
         return expr_level
 
     def analyze_if(self, if_stmnt):
-        test_level = if_stmnt.test[0].get_analyzed(self)
+        test_level = if_stmnt.test.get_analyzed(self)
+        print("test {}".format(if_stmnt.test))
+        print("test_level {}".format(test_level))
 
         for node in if_stmnt.body:
-            if isinstance(node,Assign):
+            if isinstance(node, Assign):
+                node_level = node.get_analyzed(self)
+                print("node_level in if body {}".format(test_level))
                 for var in node.vars:
                     if var.name in self.decl_vars:
                         if isinstance(test_level, Tainted):
                             self.decl_vars[var.name] = test_level
-                        elif isinstance(test_level, Sanitized) and isinstance(self.decl_vars[var.name], Untainted):
+                        elif isinstance(test_level, Sanitized) and isinstance(node_level, Untainted):
                             self.decl_vars[var.name] = test_level
         for node in if_stmnt.orelse:
-            if isinstance(node,Assign):
+            if isinstance(node, Assign):
+                node_level = node.get_analyzed(self)
+                print("node_level in else body {}".format(test_level))
                 for var in node.vars:
                     if var.name in self.decl_vars:
                         if isinstance(test_level, Tainted):
                             self.decl_vars[var.name] = test_level
-                        elif isinstance(test_level, Sanitized) and isinstance(self.decl_vars[var.name], Untainted):
+                        elif isinstance(test_level, Sanitized) and isinstance(node_level, Untainted):
                             self.decl_vars[var.name] = test_level
 
 
@@ -84,7 +92,7 @@ class Analyzer:
 
         for node in while_stmnt.body:
             node_level = node.get_analyzed(self)
-            if isinstance(node,Assign):
+            if isinstance(node, Assign):
                 for var in node.vars:
                     if var.name in self.decl_vars:
                         if isinstance(test_level, Tainted):
@@ -92,8 +100,8 @@ class Analyzer:
                         elif sinstance(test_level, Sanitized) and isinstance(node_level, Untainted):
                             self.decl_vars[var.name] = test_level
         for node in while_stmnt.orelse:
-            nnode_level = node.get_analyzed(self)
-            if isinstance(node,Assign):
+            node_level = node.get_analyzed(self)
+            if isinstance(node, Assign):
                 for var in node.vars:
                     if var.name in self.decl_vars:
                         if isinstance(test_level, Tainted):
@@ -163,6 +171,7 @@ class Analyzer:
             return Untainted()
 
     def analyze_var_expr(self, expr):
+        print("analyzing var expr {}".format(expr))
         # check whether variable is declared
         if expr.name in self.decl_vars:
             return self.decl_vars[expr.name]

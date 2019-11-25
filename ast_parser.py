@@ -31,34 +31,35 @@ class AstParser:
         elif node[self.type_string] == 'Expr':
             return self.parse_expr(node['value'])
         elif node[self.type_string] == 'If':
-            return self.parse_if(node['body'],node['orelse'],node['test'])
+            return self.parse_if(node['body'], node['orelse'], node['test'])
         elif node[self.type_string] == 'While':
-            return self.parse_while(node['body'],node['orelse'],node['test'])
+            return self.parse_while(node['body'], node['orelse'], node['test'])
 
     def parse_assign(self, targets, value):
         return Assign(self.parse_targets(targets), self.parse_expr(value))
 
-    def parse_if(self,body,orelse,test):
+    def parse_if(self, body, orelse, test):
         body_nodes = []
         for dict in body:
             body_nodes.append(self.parse_body_node(dict))
         orelse_nodes = []
-        for dict in body:
+        for dict in orelse:
             orelse_nodes.append(self.parse_body_node(dict))
-        test_nodes = []
-        for dict in body:
-            test_nodes.append(self.parse_body_node(dict))
+        #test_nodes = []
+        #for dict in test:
+         #   test_nodes.append(self.parse_body_node(dict))
+        test_nodes = self.parse_body_node(dict)
         return If(body_nodes,orelse_nodes,test_nodes)
 
-    def parse_while(self):
+    def parse_while(self, body, orelse, test):
         body_nodes = []
         for dict in body:
             body_nodes.append(self.parse_body_node(dict))
         orelse_nodes = []
-        for dict in body:
+        for dict in orelse:
             orelse_nodes.append(self.parse_body_node(dict))
         test_nodes = []
-        for dict in body:
+        for dict in test:
             test_nodes.append(self.parse_body_node(dict))
         return While(body_nodes,orelse_nodes,test_nodes)
 
