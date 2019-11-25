@@ -1,0 +1,27 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "Expr",
+            "col_offset": 0,
+            "lineno": 1,
+            "value": {
+                "_type": "UnaryOp",
+                "col_offset": 0,
+                "lineno": 1,
+                "op": {
+                    "_type": "Not"
+                },
+                "operand": {
+                    "_type": "Name",
+                    "col_offset": 4,
+                    "ctx": {
+                        "_type": "Load"
+                    },
+                    "id": "a",
+                    "lineno": 1
+                }
+            }
+        }
+    ]
+}
