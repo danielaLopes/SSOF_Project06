@@ -9,12 +9,19 @@ class Analyzer:
         self.decl_vars = {}
         self.state = []
         # output vulnerabilities are constructed during ast parsing with analyzer
-        self.vulnerabilities = []
+        self.basic_vulnerabilities = []
+        self.advanced_vulnerabilities = []
 
-    def add_vulnerability(self, vulnerability, sources, sink):
-        self.vulnerabilities.append({"vulnerability": vulnerability,
-                                     "sources": sources,
-                                     "sink": sink})
+    def add_vulnerability_basic(self, vulnerability, sources, sink, sanitizers):
+        self.basic_vulnerabilities.append({"vulnerability": vulnerability,
+                                           "sources": sources,
+                                           "sink": sink,
+                                           "sanitizers": sanitizers})
+
+    def add_vulnerability_advanced(self, vulnerability, sources, sink):
+        self.advanced_vulnerabilities.append({"vulnerability": vulnerability,
+                                              "sources": sources,
+                                              "sink": sink})
 
     def analyze_ast(self, ast):
         ast.body.get_analyzed(self)
@@ -39,21 +46,47 @@ class Analyzer:
         return expr_level
 
     def analyze_if(self, if_stmnt):
+        test_level = if_stmnt.test[0].get_analyzed(self)
+
         for node in if_stmnt.body:
-            node.get_analyzed(self)
+            if isinstance(node,Assign):
+                for var in node.vars:
+                    if var.name in self.decl_vars:
+                        if isinstance(test_level, Tainted):
+                            self.decl_vars[var.name] = test_level
+                        elif isinstance(test_level, Sanitized) and isinstance(self.decl_vars[var.name], Untainted):
+                            self.decl_vars[var.name] = test_level
         for node in if_stmnt.orelse:
-            node.get_analyzed(self)
-        for node in if_stmnt.test:
-            node.get_analyzed(self)
+            if isinstance(node,Assign):
+                for var in node.vars:
+                    if var.name in self.decl_vars:
+                        if isinstance(test_level, Tainted):
+                            self.decl_vars[var.name] = test_level
+                        elif isinstance(test_level, Sanitized) and isinstance(self.decl_vars[var.name], Untainted):
+                            self.decl_vars[var.name] = test_level
 
 
     def analyze_while(self, while_stmnt):
+        test_level = while_stmnt.test[0].get_analyzed(self)
+
         for node in while_stmnt.body:
-            node.get_analyzed(self)
+            node_level = node.get_analyzed(self)
+            if isinstance(node,Assign):
+                for var in node.vars:
+                    if var.name in self.decl_vars:
+                        if isinstance(test_level, Tainted):
+                            self.decl_vars[var.name] = test_level
+                        elif sinstance(test_level, Sanitized) and isinstance(node_level, Untainted):
+                            self.decl_vars[var.name] = test_level
         for node in while_stmnt.orelse:
-            node.get_analyzed(self)
-        for node in while_stmnt.test:
-            node.get_analyzed(self)
+            nnode_level = node.get_analyzed(self)
+            if isinstance(node,Assign):
+                for var in node.vars:
+                    if var.name in self.decl_vars:
+                        if isinstance(test_level, Tainted):
+                            self.decl_vars[var.name] = test_level
+                        elif isinstance(test_level, Sanitized) and isinstance(node_level, Untainted):
+                            self.decl_vars[var.name] = test_level
 
     def analyze_func(self, func):
         normal_kind = None
@@ -81,7 +114,8 @@ class Analyzer:
 
         else:
             sanitizers = []
-            sources = []
+            sources_basic = []
+            sources_advanced = []
             is_tainted = None
             for arg in func_call.args:
                 level = arg.get_analyzed(self)
@@ -90,17 +124,21 @@ class Analyzer:
                     if isinstance(level, Tainted):
                         is_tainted = level
                     if isinstance(arg, VarExpr):
-                        sources.append({'name': arg.name, 'sanitizers': level_sanitizers})
+                        sources_basic.append(arg.name)
+                        sources_advanced.append({'name': arg.name, 'sanitizers': level_sanitizers})
                     elif isinstance(arg, FuncCall):
-                        sources.append({'name': arg.func.name, 'sanitizers': level_sanitizers})
+                        sources_basic.append(arg.func.name)
+                        sources_advanced.append({'name': arg.func.name, 'sanitizers': level_sanitizers})
                     sanitizers.extend(level_sanitizers)
 
             if kind == "SINK":
-                self.add_vulnerability(pattern.vulnerability, sources, func_call.func.name)
+                self.add_vulnerability_basic(pattern.vulnerability, sources_basic, func_call.func.name, sanitizers)
+                self.add_vulnerability_advanced(pattern.vulnerability, sources_advanced, func_call.func.name)
 
         if is_tainted:
             return is_tainted
-        elif len(sources) > 0:
+        # sources_basic and sources_advanced are going to have the same size
+        elif len(sources_basic) > 0:
             return Sanitized(sanitizers, None)
         else:
             return Untainted()

@@ -13,7 +13,7 @@ class Sanitized:
     def get_sanitizers(self, vulnerability):
         if vulnerability in self.sanitizers:
             return self.sanitizers[vulnerability]
-        return {}
+        return []
 
     def add_sanitizer(self, other):
         vulnerabilities = list(other.sanitizers.keys())
@@ -40,4 +40,4 @@ class Untainted:
         return 'UNTAINTED'
 
     def get_sanitizers(self, vulnerability):
-        return {}
+        return []
