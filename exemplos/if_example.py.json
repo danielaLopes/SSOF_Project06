@@ -1,0 +1,167 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "Assign",
+            "col_offset": 0,
+            "lineno": 1,
+            "targets": [
+                {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Store"
+                    },
+                    "id": "nis",
+                    "lineno": 1
+                }
+            ],
+            "value": {
+                "_type": "Call",
+                "args": [
+                    {
+                        "_type": "Name",
+                        "col_offset": 6,
+                        "ctx": {
+                            "_type": "Load"
+                        },
+                        "id": "boo",
+                        "lineno": 1
+                    }
+                ],
+                "col_offset": 4,
+                "func": {
+                    "_type": "Name",
+                    "col_offset": 4,
+                    "ctx": {
+                        "_type": "Load"
+                    },
+                    "id": "b",
+                    "lineno": 1
+                },
+                "keywords": [],
+                "lineno": 1
+            }
+        },
+        {
+            "_type": "If",
+            "body": [
+                {
+                    "_type": "Assign",
+                    "col_offset": 3,
+                    "lineno": 3,
+                    "targets": [
+                        {
+                            "_type": "Name",
+                            "col_offset": 3,
+                            "ctx": {
+                                "_type": "Store"
+                            },
+                            "id": "q",
+                            "lineno": 3
+                        }
+                    ],
+                    "value": {
+                        "_type": "Str",
+                        "col_offset": 7,
+                        "lineno": 3,
+                        "s": "xpto1 indarg xpto2"
+                    }
+                }
+            ],
+            "col_offset": 0,
+            "lineno": 2,
+            "orelse": [
+                {
+                    "_type": "Assign",
+                    "col_offset": 3,
+                    "lineno": 5,
+                    "targets": [
+                        {
+                            "_type": "Name",
+                            "col_offset": 3,
+                            "ctx": {
+                                "_type": "Store"
+                            },
+                            "id": "q",
+                            "lineno": 5
+                        }
+                    ],
+                    "value": {
+                        "_type": "Call",
+                        "args": [
+                            {
+                                "_type": "Name",
+                                "col_offset": 11,
+                                "ctx": {
+                                    "_type": "Load"
+                                },
+                                "id": "q",
+                                "lineno": 5
+                            }
+                        ],
+                        "col_offset": 5,
+                        "func": {
+                            "_type": "Name",
+                            "col_offset": 5,
+                            "ctx": {
+                                "_type": "Load"
+                            },
+                            "id": "clean",
+                            "lineno": 5
+                        },
+                        "keywords": [],
+                        "lineno": 5
+                    }
+                }
+            ],
+            "test": {
+                "_type": "Compare",
+                "col_offset": 3,
+                "comparators": [
+                    {
+                        "_type": "Call",
+                        "args": [
+                            {
+                                "_type": "Name",
+                                "col_offset": 15,
+                                "ctx": {
+                                    "_type": "Load"
+                                },
+                                "id": "koneksi",
+                                "lineno": 2
+                            }
+                        ],
+                        "col_offset": 13,
+                        "func": {
+                            "_type": "Name",
+                            "col_offset": 13,
+                            "ctx": {
+                                "_type": "Load"
+                            },
+                            "id": "d",
+                            "lineno": 2
+                        },
+                        "keywords": [],
+                        "lineno": 2
+                    }
+                ],
+                "left": {
+                    "_type": "Name",
+                    "col_offset": 3,
+                    "ctx": {
+                        "_type": "Load"
+                    },
+                    "id": "indarg",
+                    "lineno": 2
+                },
+                "lineno": 2,
+                "ops": [
+                    {
+                        "_type": "Eq"
+                    }
+                ]
+            }
+        }
+    ]
+}

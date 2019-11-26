@@ -1,0 +1,1 @@
+query=query1 . query2

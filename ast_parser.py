@@ -78,6 +78,8 @@ class AstParser:
             return StrExpr(value['s'])
         elif value[self.type_string] == 'Call':
             return self.parse_func_call(value['args'], value['func'])
+        elif value[self.type_string] == 'Attribute':
+            return self.parse_attribute(value['value'])
         elif value[self.type_string] == 'BinOp':
             return self.parse_bin_op(value['left'], value['right'])
         elif value[self.type_string] == 'BoolOp':
@@ -93,6 +95,9 @@ class AstParser:
         for arg in args:
             argList.append(self.parse_expr(arg))
         return FuncCall(argList, Func(func['id']))
+
+    def parse_attribute(self, value):
+        return Attribute(self.parse_expr(value))
 
     def parse_bin_op(self, left, right):
         left_node = self.parse_expr(left)

@@ -91,7 +91,15 @@ class FuncCall(Expr):
         return analyzer.analyze_func_call(self)
 
 
-#class Attribute:
+class Attribute:
+    def __init__(self, value):
+        self.value = value
+
+    def __repr__(self):
+        return 'Attribute(%s)' % self.value
+
+    def get_analyzed(self, analyzer):
+        return analyzer.analyze_attribute(self)
 
 
 class VarExpr(Expr):

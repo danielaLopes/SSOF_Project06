@@ -1,0 +1,39 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "Assign",
+            "col_offset": 0,
+            "lineno": 1,
+            "targets": [
+                {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Store"
+                    },
+                    "id": "query",
+                    "lineno": 1
+                }
+            ],
+            "value": {
+                "_type": "Attribute",
+                "attr": "query2",
+                "col_offset": 6,
+                "ctx": {
+                    "_type": "Load"
+                },
+                "lineno": 1,
+                "value": {
+                    "_type": "Name",
+                    "col_offset": 6,
+                    "ctx": {
+                        "_type": "Load"
+                    },
+                    "id": "query1",
+                    "lineno": 1
+                }
+            }
+        }
+    ]
+}

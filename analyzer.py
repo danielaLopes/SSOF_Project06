@@ -40,7 +40,7 @@ class Analyzer:
 
     def analyze_body(self, body):
         for node in body.nodes:
-            node.get_analyzed(self)
+            print("{} analyzed {}".format(node, node.get_analyzed(self)))
 
     def analyze_assign(self, assign):
         print("analyzing assign {}".format(assign))
@@ -62,12 +62,10 @@ class Analyzer:
 
     def analyze_if(self, if_stmnt):
         test_level = if_stmnt.test.get_analyzed(self)
-        print("test {}".format(if_stmnt.test))
-        print("test_level {}".format(test_level))
 
         for node in if_stmnt.body:
+            node_level = node.get_analyzed(self)
             if isinstance(node, Assign):
-                node_level = node.get_analyzed(self)
                 print("node_level in if body {}".format(test_level))
                 for var in node.vars:
                     if var.name in self.decl_vars:
@@ -75,9 +73,11 @@ class Analyzer:
                             self.decl_vars[var.name] = test_level
                         elif isinstance(test_level, Sanitized) and isinstance(node_level, Untainted):
                             self.decl_vars[var.name] = test_level
+            elif isinstance(node, Attribute):
+                pass
         for node in if_stmnt.orelse:
+            node_level = node.get_analyzed(self)
             if isinstance(node, Assign):
-                node_level = node.get_analyzed(self)
                 print("node_level in else body {}".format(test_level))
                 for var in node.vars:
                     if var.name in self.decl_vars:
@@ -97,7 +97,7 @@ class Analyzer:
                     if var.name in self.decl_vars:
                         if isinstance(test_level, Tainted):
                             self.decl_vars[var.name] = test_level
-                        elif sinstance(test_level, Sanitized) and isinstance(node_level, Untainted):
+                        elif isinstance(test_level, Sanitized) and isinstance(node_level, Untainted):
                             self.decl_vars[var.name] = test_level
         for node in while_stmnt.orelse:
             node_level = node.get_analyzed(self)
@@ -169,6 +169,9 @@ class Analyzer:
             return Sanitized(sanitizers, None)
         else:
             return Untainted()
+
+    def analyze_attribute(self, attribute):
+        return attribute.value.get_analyzed(self)
 
     def analyze_var_expr(self, expr):
         print("analyzing var expr {}".format(expr))

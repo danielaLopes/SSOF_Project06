@@ -46,11 +46,14 @@ class Tainted:
 
 
 class Untainted:
+    def __init__(self):
+        self.sanitizers = []
+
     def __repr__(self):
         return 'UNTAINTED'
 
     def get_sanitizers(self, vulnerability):
-        return []
+        return self.sanitizers
 
 
 def maxLevel(level1, level2):
@@ -70,4 +73,4 @@ def maxLevel(level1, level2):
 
     #is untainted
     else:
-        return Sanitized()
+        return Untainted()
