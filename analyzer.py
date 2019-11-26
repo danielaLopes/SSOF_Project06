@@ -42,10 +42,10 @@ class Analyzer:
 
     def analyze_body(self, body):
         for node in body.nodes:
-            print("{} analyzed {}".format(node, node.get_analyzed(self)))
+            node.get_analyzed(self)
 
     def analyze_assign(self, assign):
-        print("analyzing assign {}".format(assign))
+        #print("analyzing assign {}".format(assign))
         expr_level = assign.expr.get_analyzed(self)
         for var in assign.vars:
             if var.name in self.decl_vars:
@@ -59,13 +59,13 @@ class Analyzer:
                         self.decl_vars[var.name].sanitizers.extend(expr_level.sanitizers)
             else:
                 self.decl_vars[var.name] = expr_level
-        print("expr_level in assign {}".format(expr_level))
+        print("expr_level: {} in assign is: {}".format(assign.expr, expr_level))
         return expr_level
 
     def analyze_if(self, if_stmnt):
         test_level = if_stmnt.test.get_analyzed(self)
 
-        self.branch_levels.push(test_level)
+        self.branch_levels.append(test_level)
 
         # already updates values with worst level possible
         self.analyze_branch(test_level, if_stmnt.body)
@@ -77,7 +77,7 @@ class Analyzer:
     def analyze_while(self, while_stmnt):
         test_level = while_stmnt.test.get_analyzed(self)
 
-        self.branch_levels.push(test_level)
+        self.branch_levels.append(test_level)
 
         # already updates values with worst level possible
         self.analyze_branch(test_level, while_stmnt.body)
@@ -87,6 +87,7 @@ class Analyzer:
     # branch is not a node, but is useful to use this notion to not repeat code,
     # since logic is the same in if, else or while branches
     def analyze_branch(self, test_level, body_node):
+        #print("BODY NODE {}".format(body_node))
         for node in body_node:
             node_level_if = node.get_analyzed(self)
             if isinstance(node, Assign):
@@ -143,7 +144,8 @@ class Analyzer:
                         sources_advanced.append({'name': arg.func.name, 'sanitizers': arg_sanitizers})
                     sanitizers.extend(arg_sanitizers)
 
-            if kind == "SINK":
+            # only signals vulnerability if the sink has arguments that may cause a vulnerability
+            if kind == "SINK" and (is_tainted or len(sanitizers) > 0):
                 self.add_vulnerability_basic(pattern.vulnerability, sources_basic, func_call.func.name, sanitizers)
                 self.add_vulnerability_advanced(pattern.vulnerability, sources_advanced, func_call.func.name)
 
@@ -162,11 +164,11 @@ class Analyzer:
         return maxLevel(attr_level, value_level)
 
     def analyze_var_expr(self, expr):
-        print("analyzing var expr {}".format(expr))
+        #print("analyzing var expr {}".format(expr))
         # check whether variable is declared
-        print("decl_vars {}".format(self.decl_vars))
+        #print("decl_vars {}".format(self.decl_vars))
         if expr.name in self.decl_vars:
-            print("VARIABLE IS DECLARED")
+            #print("VARIABLE IS DECLARED")
             return self.decl_vars[expr.name]
         else:
             return Tainted(expr.name)
@@ -175,6 +177,9 @@ class Analyzer:
         return Untainted()
 
     def analyze_str_expr(self, expr):
+        return Untainted()
+
+    def analyze_name_constant_expr(self, expr):
         return Untainted()
 
     def analyze_bin_op(self, expr):
@@ -188,4 +193,10 @@ class Analyzer:
         return maxLevel(left_level, comparator_level)
 
     def analyze_unary_op(self, expr):
+        #print("analyzing unary node {}", expr)
         return expr.operand.get_analyzed(self)
+
+    def analyze_tuple(self, expr):
+        el1_level = expr.el1.get_analyzed(self)
+        el2_level = expr.el2.get_analyzed(self)
+        return maxLevel(el1_level, el2_level)

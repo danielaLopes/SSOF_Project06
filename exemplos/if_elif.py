@@ -1,6 +1,9 @@
+a = 4
 if a > 2:
     b = "ola"
+    c = b
 elif a > 3:
-    b = "grr"
+    c = b
 else:
-    b = "adeus"
+    d = "adeus"
+    b = tainted

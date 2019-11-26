@@ -77,6 +77,8 @@ class AstParser:
             return self.parse_var_expr(value['id'])
         elif value[self.type_string] == 'Str':
             return StrExpr(value['s'])
+        elif value[self.type_string] == 'NameConstant':
+            return NameConstantExpr(value['value'])
         elif value[self.type_string] == 'Call':
             return self.parse_func_call(value['args'], value['func'])
         elif value[self.type_string] == 'Attribute':
@@ -89,20 +91,28 @@ class AstParser:
             return self.parse_bool_op(value['values'][0], value['values'][1])
         elif value[self.type_string] == 'UnaryOp':
             return self.parse_unary_op(value['operand'])
+        elif value[self.type_string] == 'Tuple':
+            return self.parse_tuple(value['elts'])
 
     def parse_var_expr(self, id):
         return VarExpr(id)
 
     def parse_func_call(self, args, func):
         argList = []
+       # print("parsing func call {}".format(func))
         for arg in args:
             argList.append(self.parse_expr(arg))
-        return FuncCall(argList, Func(func['id']))
+        # distinguish cases where func is an attribute
+        if 'id' in func:
+            return FuncCall(argList, Func(func['id']))
+        elif 'attr' in func:
+            return FuncCall(argList, Func(func['attr']))
 
     def parse_attribute(self, attr, value):
         return Attribute(self.parse_var_expr(attr), self.parse_expr(value))
 
     def parse_bin_op(self, left, right):
+        print("parsing bin op left: {}, right: {}".format(left, right))
         left_node = self.parse_expr(left)
         right_node = self.parse_expr(right)
         return BinOp(left_node, right_node)
@@ -114,4 +124,9 @@ class AstParser:
 
     def parse_unary_op(self, operand):
         operand_node = self.parse_expr(operand)
-        return BinOp(operand_node)
+        return UnaryOp(operand_node)
+
+    def parse_tuple(self, elements):
+        el1 = self.parse_expr(elements[0])
+        el2 = self.parse_expr(elements[1])
+        return Tuple(el1, el2)

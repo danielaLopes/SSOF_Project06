@@ -27,49 +27,58 @@
             "_type": "If",
             "body": [
                 {
-                    "_type": "Assign",
+                    "_type": "Expr",
                     "col_offset": 4,
                     "lineno": 3,
-                    "targets": [
-                        {
+                    "value": {
+                        "_type": "BinOp",
+                        "col_offset": 4,
+                        "left": {
                             "_type": "Name",
                             "col_offset": 4,
                             "ctx": {
-                                "_type": "Store"
+                                "_type": "Load"
                             },
-                            "id": "b",
+                            "id": "a",
                             "lineno": 3
-                        }
-                    ],
-                    "value": {
-                        "_type": "Str",
-                        "col_offset": 8,
+                        },
                         "lineno": 3,
-                        "s": "ola"
+                        "op": {
+                            "_type": "Add"
+                        },
+                        "right": {
+                            "_type": "Num",
+                            "col_offset": 6,
+                            "lineno": 3,
+                            "n": 2
+                        }
                     }
                 },
                 {
-                    "_type": "Assign",
+                    "_type": "Expr",
                     "col_offset": 4,
                     "lineno": 4,
-                    "targets": [
-                        {
+                    "value": {
+                        "_type": "Call",
+                        "args": [
+                            {
+                                "_type": "Str",
+                                "col_offset": 10,
+                                "lineno": 4,
+                                "s": "ola"
+                            }
+                        ],
+                        "col_offset": 4,
+                        "func": {
                             "_type": "Name",
                             "col_offset": 4,
                             "ctx": {
-                                "_type": "Store"
+                                "_type": "Load"
                             },
-                            "id": "c",
+                            "id": "print",
                             "lineno": 4
-                        }
-                    ],
-                    "value": {
-                        "_type": "Name",
-                        "col_offset": 8,
-                        "ctx": {
-                            "_type": "Load"
                         },
-                        "id": "b",
+                        "keywords": [],
                         "lineno": 4
                     }
                 }
@@ -81,28 +90,25 @@
                     "_type": "If",
                     "body": [
                         {
-                            "_type": "Assign",
+                            "_type": "Expr",
                             "col_offset": 4,
                             "lineno": 6,
-                            "targets": [
-                                {
+                            "value": {
+                                "_type": "UnaryOp",
+                                "col_offset": 4,
+                                "lineno": 6,
+                                "op": {
+                                    "_type": "Not"
+                                },
+                                "operand": {
                                     "_type": "Name",
-                                    "col_offset": 4,
+                                    "col_offset": 8,
                                     "ctx": {
-                                        "_type": "Store"
+                                        "_type": "Load"
                                     },
-                                    "id": "c",
+                                    "id": "a",
                                     "lineno": 6
                                 }
-                            ],
-                            "value": {
-                                "_type": "Name",
-                                "col_offset": 8,
-                                "ctx": {
-                                    "_type": "Load"
-                                },
-                                "id": "b",
-                                "lineno": 6
                             }
                         }
                     ],
@@ -110,50 +116,53 @@
                     "lineno": 5,
                     "orelse": [
                         {
-                            "_type": "Assign",
+                            "_type": "Expr",
                             "col_offset": 4,
                             "lineno": 8,
-                            "targets": [
-                                {
+                            "value": {
+                                "_type": "UnaryOp",
+                                "col_offset": 4,
+                                "lineno": 8,
+                                "op": {
+                                    "_type": "Not"
+                                },
+                                "operand": {
                                     "_type": "Name",
-                                    "col_offset": 4,
+                                    "col_offset": 8,
                                     "ctx": {
-                                        "_type": "Store"
+                                        "_type": "Load"
                                     },
-                                    "id": "d",
+                                    "id": "b",
                                     "lineno": 8
                                 }
-                            ],
-                            "value": {
-                                "_type": "Str",
-                                "col_offset": 8,
-                                "lineno": 8,
-                                "s": "adeus"
                             }
                         },
                         {
-                            "_type": "Assign",
+                            "_type": "Expr",
                             "col_offset": 4,
                             "lineno": 9,
-                            "targets": [
-                                {
+                            "value": {
+                                "_type": "BinOp",
+                                "col_offset": 4,
+                                "left": {
                                     "_type": "Name",
                                     "col_offset": 4,
                                     "ctx": {
-                                        "_type": "Store"
+                                        "_type": "Load"
                                     },
-                                    "id": "b",
+                                    "id": "a",
                                     "lineno": 9
-                                }
-                            ],
-                            "value": {
-                                "_type": "Name",
-                                "col_offset": 8,
-                                "ctx": {
-                                    "_type": "Load"
                                 },
-                                "id": "tainted",
-                                "lineno": 9
+                                "lineno": 9,
+                                "op": {
+                                    "_type": "Add"
+                                },
+                                "right": {
+                                    "_type": "Num",
+                                    "col_offset": 7,
+                                    "lineno": 9,
+                                    "n": 3
+                                }
                             }
                         }
                     ],

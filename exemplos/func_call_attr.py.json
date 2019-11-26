@@ -1,0 +1,68 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "Assign",
+            "col_offset": 0,
+            "lineno": 1,
+            "targets": [
+                {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Store"
+                    },
+                    "id": "from_timestamp",
+                    "lineno": 1
+                }
+            ],
+            "value": {
+                "_type": "Call",
+                "args": [
+                    {
+                        "_type": "Str",
+                        "col_offset": 34,
+                        "lineno": 1,
+                        "s": "from_timestamp"
+                    },
+                    {
+                        "_type": "NameConstant",
+                        "col_offset": 52,
+                        "lineno": 1,
+                        "value": null
+                    }
+                ],
+                "col_offset": 17,
+                "func": {
+                    "_type": "Attribute",
+                    "attr": "get",
+                    "col_offset": 17,
+                    "ctx": {
+                        "_type": "Load"
+                    },
+                    "lineno": 1,
+                    "value": {
+                        "_type": "Attribute",
+                        "attr": "args",
+                        "col_offset": 17,
+                        "ctx": {
+                            "_type": "Load"
+                        },
+                        "lineno": 1,
+                        "value": {
+                            "_type": "Name",
+                            "col_offset": 17,
+                            "ctx": {
+                                "_type": "Load"
+                            },
+                            "id": "request",
+                            "lineno": 1
+                        }
+                    }
+                },
+                "keywords": [],
+                "lineno": 1
+            }
+        }
+    ]
+}

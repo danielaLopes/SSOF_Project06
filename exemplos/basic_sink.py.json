@@ -1,0 +1,33 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "Expr",
+            "col_offset": 0,
+            "lineno": 1,
+            "value": {
+                "_type": "Call",
+                "args": [
+                    {
+                        "_type": "Num",
+                        "col_offset": 8,
+                        "lineno": 1,
+                        "n": 2
+                    }
+                ],
+                "col_offset": 0,
+                "func": {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Load"
+                    },
+                    "id": "execute",
+                    "lineno": 1
+                },
+                "keywords": [],
+                "lineno": 1
+            }
+        }
+    ]
+}

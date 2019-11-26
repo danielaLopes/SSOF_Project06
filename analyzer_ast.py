@@ -135,6 +135,17 @@ class StrExpr(Expr):
         return analyzer.analyze_str_expr(self)
 
 
+class NameConstantExpr(Expr):
+    def __init__(self, value):
+        self.value = value
+
+    def __repr__(self):
+        return 'NameConstantExpr(%s)' % self.value
+
+    def get_analyzed(self, analyzer):
+        return analyzer.analyze_name_constant_expr(self)
+
+
 class BinOp(Expr):
     def __init__(self, left, right):
         self.left = left
@@ -169,3 +180,14 @@ class UnaryOp(Expr):
     def get_analyzed(self, analyzer):
         return analyzer.analyze_unary_op(self)
 
+
+class Tuple(Expr):
+    def __init__(self, el1, el2):
+        self.el1 = el1
+        self.el2 = el2
+
+    def __repr__(self):
+        return 'Tuple(%s, %s)' % (self.el1, self.el2)
+
+    def get_analyzed(self, analyzer):
+        return analyzer.analyze_tuple(self)
