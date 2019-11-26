@@ -7,5 +7,5 @@
     {"vulnerability":"Command Injection",
     "sources":["get", "get_object_or_404", "ContactMailForm", "ChatMessageForm", "copy"],
     "sanitizers":["Popen"],
-    "sinks":["call", "check_call", "check_output", "system", "spawn", "popen"]},
+    "sinks":["call", "check_call", "check_output", "system", "spawn", "popen"]}
 ]
