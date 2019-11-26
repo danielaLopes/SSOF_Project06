@@ -31,10 +31,10 @@ class AstParser:
         elif node[self.type_string] == 'Expr':
             return self.parse_expr(node['value'])
         elif node[self.type_string] == 'If':
-            print("BODY {}".format(node['body']))
+            """print("BODY {}".format(node['body']))
             print("ORELSE {}".format(node['orelse']))
             print("TEST {}".format(node['test']))
-            print("NODE {}".format(node))
+            print("NODE {}".format(node))"""
             return self.parse_if(node['body'], node['orelse'], node['test'])
         elif node[self.type_string] == 'While':
             return self.parse_while(node['body'], node['test'])

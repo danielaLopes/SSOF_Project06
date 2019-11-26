@@ -60,9 +60,10 @@ def maxLevel(level1, level2):
     # same levels that are not untainted
     if isinstance(level1, Tainted) and isinstance(level2, Tainted):
         if level1.source != level2.source:
+            print(level1.source)
             return Tainted([level1.source, level2.source])
         else:
-            return Tainted([level1.source])
+            return Tainted(level1.source)
 
     elif isinstance(level1, Sanitized) and isinstance(level2, Sanitized):
         if level1.source != level2.source:
@@ -75,10 +76,12 @@ def maxLevel(level1, level2):
 
     # different level, but one is worse than the other
     elif isinstance(level1, Tainted) and isinstance(level2, Sanitized) or\
-            isinstance(level1, Tainted) and isinstance(level2, Untainted):
+            isinstance(level1, Tainted) and isinstance(level2, Untainted) or\
+            isinstance(level1, Sanitized) and isinstance(level2, Untainted):
         return level1
-    elif isinstance(level1, Sanitized) and isinstance(level2, Tainted) or \
-            isinstance(level1, Untainted) and isinstance(level2, Tainted):
+    elif isinstance(level1, Sanitized) and isinstance(level2, Tainted) or\
+            isinstance(level1, Untainted) and isinstance(level2, Tainted) or\
+            isinstance(level1, Untainted) and isinstance(level2, Sanitized):
         return level2
 
     #is untainted

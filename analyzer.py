@@ -26,6 +26,15 @@ class Analyzer:
                 sanitizers_per_vuln.append(sanitizer)
         return sanitizers_per_vuln
 
+    def get_max_nested_branch_levels(self, current_level):
+        print("BRANCH LEVELS: {}".format(self.branch_levels))
+        combined_levels = current_level
+        if len(self.branch_levels) > 1:
+            for i in range(0, len(self.branch_levels)-1):
+                combined_levels = maxLevel(self.branch_levels[i], self.branch_levels[i+1])
+        print("combined levels: {}".format(combined_levels))
+        return combined_levels
+
     def add_vulnerability_basic(self, vulnerability, sources, sink, sanitizers):
         self.basic_vulnerabilities.append({"vulnerability": vulnerability,
                                            "sources": sources,
@@ -63,13 +72,14 @@ class Analyzer:
         return expr_level
 
     def analyze_if(self, if_stmnt):
+        # combine levels of all nested conditions
         test_level = if_stmnt.test.get_analyzed(self)
-
         self.branch_levels.append(test_level)
+        combined_level = self.get_max_nested_branch_levels(test_level)
 
         # already updates values with worst level possible
-        self.analyze_branch(test_level, if_stmnt.body)
-        self.analyze_branch(test_level, if_stmnt.orelse)
+        self.analyze_branch(combined_level, if_stmnt.body)
+        self.analyze_branch(combined_level, if_stmnt.orelse)
 
         self.branch_levels.pop()
 
@@ -94,6 +104,7 @@ class Analyzer:
                 #print("node_level after assign in else body {}".format(test_level))
                 for var in node.vars:
                     self.decl_vars[var.name] = maxLevel(test_level, node_level_if)
+                    print("var {} level {} after if flow".format(var, self.decl_vars[var.name]))
 
     def analyze_func(self, func):
         normal_kind = None
@@ -137,11 +148,11 @@ class Analyzer:
                     if isinstance(arg_level, Tainted):
                         is_tainted = arg_level
                     if isinstance(arg, VarExpr):
-                        sources_basic.append(arg.name)
-                        sources_advanced.append({'name': arg.name, 'sanitizers': arg_sanitizers})
+                        sources_advanced.append({'source of '+arg.name: arg_level.source, 'sanitizers': arg_sanitizers})
                     elif isinstance(arg, FuncCall):
-                        sources_basic.append(arg.func.name)
-                        sources_advanced.append({'name': arg.func.name, 'sanitizers': arg_sanitizers})
+                        sources_advanced.append({'source of '+arg.func.name: arg_level.source, 'sanitizers': arg_sanitizers})
+                    if arg_level.source not in sources_basic:
+                        sources_basic.append(arg_level.source)
                     sanitizers.extend(arg_sanitizers)
 
             # only signals vulnerability if the sink has arguments that may cause a vulnerability
