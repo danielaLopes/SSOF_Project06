@@ -45,20 +45,19 @@ class If(BodyNode):
         self.test = test
 
     def __repr__(self):
-        return 'If(%s, %s, %s)' % (self.body, self.orelse ,self.test)
+        return 'If(%s, %s, %s)' % (self.test, self.body, self.orelse)
 
     def get_analyzed(self, analyzer):
         return analyzer.analyze_if(self)
 
 
 class While(BodyNode):
-    def __init__(self, body, orelse, test):
+    def __init__(self, body, test):
         self.body = body
-        self.orelse = orelse
         self.test = test
 
     def __repr__(self):
-        return 'While(%s, %s, %s)' % (self.body, self.orelse ,self.test)
+        return 'While(%s, %s)' % (self.test, self.body)
 
     def get_analyzed(self, analyzer):
         return analyzer.analyze_while(self)
@@ -92,11 +91,12 @@ class FuncCall(Expr):
 
 
 class Attribute:
-    def __init__(self, value):
+    def __init__(self, attr, value):
+        self.attr = attr
         self.value = value
 
     def __repr__(self):
-        return 'Attribute(%s)' % self.value
+        return 'Attribute(%s, %s)' % (self.attr, self.value)
 
     def get_analyzed(self, analyzer):
         return analyzer.analyze_attribute(self)

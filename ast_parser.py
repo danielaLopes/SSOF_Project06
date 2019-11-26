@@ -31,37 +31,38 @@ class AstParser:
         elif node[self.type_string] == 'Expr':
             return self.parse_expr(node['value'])
         elif node[self.type_string] == 'If':
+            print("BODY {}".format(node['body']))
+            print("ORELSE {}".format(node['orelse']))
+            print("TEST {}".format(node['test']))
+            print("NODE {}".format(node))
             return self.parse_if(node['body'], node['orelse'], node['test'])
         elif node[self.type_string] == 'While':
-            return self.parse_while(node['body'], node['orelse'], node['test'])
+            return self.parse_while(node['body'], node['test'])
 
     def parse_assign(self, targets, value):
         return Assign(self.parse_targets(targets), self.parse_expr(value))
 
     def parse_if(self, body, orelse, test):
-        body_nodes = []
-        for dict in body:
-            body_nodes.append(self.parse_body_node(dict))
-        orelse_nodes = []
-        for dict in orelse:
-            orelse_nodes.append(self.parse_body_node(dict))
-        #test_nodes = []
-        #for dict in test:
-         #   test_nodes.append(self.parse_body_node(dict))
-        test_nodes = self.parse_body_node(dict)
-        return If(body_nodes,orelse_nodes,test_nodes)
+        test_node = self.parse_expr(test)
+        print("test_node IF {}".format(test_node))
 
-    def parse_while(self, body, orelse, test):
         body_nodes = []
         for dict in body:
             body_nodes.append(self.parse_body_node(dict))
         orelse_nodes = []
         for dict in orelse:
             orelse_nodes.append(self.parse_body_node(dict))
-        test_nodes = []
-        for dict in test:
-            test_nodes.append(self.parse_body_node(dict))
-        return While(body_nodes,orelse_nodes,test_nodes)
+
+        return If(body_nodes, orelse_nodes, test_node)
+
+    def parse_while(self, body, test):
+        test_node = self.parse_expr(test)
+
+        body_nodes = []
+        for dict in body:
+            body_nodes.append(self.parse_body_node(dict))
+
+        return While(body_nodes, test_node)
 
     def parse_targets(self, targets):
         targetList = []
@@ -79,9 +80,11 @@ class AstParser:
         elif value[self.type_string] == 'Call':
             return self.parse_func_call(value['args'], value['func'])
         elif value[self.type_string] == 'Attribute':
-            return self.parse_attribute(value['value'])
+            return self.parse_attribute(value['attr'], value['value'])
         elif value[self.type_string] == 'BinOp':
             return self.parse_bin_op(value['left'], value['right'])
+        elif value[self.type_string] == 'Compare':
+            return self.parse_bin_op(value['left'], value['comparators'][0])
         elif value[self.type_string] == 'BoolOp':
             return self.parse_bool_op(value['values'][0], value['values'][1])
         elif value[self.type_string] == 'UnaryOp':
@@ -96,8 +99,8 @@ class AstParser:
             argList.append(self.parse_expr(arg))
         return FuncCall(argList, Func(func['id']))
 
-    def parse_attribute(self, value):
-        return Attribute(self.parse_expr(value))
+    def parse_attribute(self, attr, value):
+        return Attribute(self.parse_var_expr(attr), self.parse_expr(value))
 
     def parse_bin_op(self, left, right):
         left_node = self.parse_expr(left)

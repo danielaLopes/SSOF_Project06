@@ -6,8 +6,10 @@ class Analyzer:
 
     def __init__(self, patterns):
         self.patterns = patterns
+        # saves a dictionary with declared variables and corresponding level
         self.decl_vars = {}
-        self.state = []
+        # stack to keep levels in nested branches
+        self.branch_levels = []
         # output vulnerabilities are constructed during ast parsing with analyzer
         self.basic_vulnerabilities = []
         self.advanced_vulnerabilities = []
@@ -63,51 +65,34 @@ class Analyzer:
     def analyze_if(self, if_stmnt):
         test_level = if_stmnt.test.get_analyzed(self)
 
-        for node in if_stmnt.body:
-            node_level = node.get_analyzed(self)
-            if isinstance(node, Assign):
-                print("node_level in if body {}".format(test_level))
-                for var in node.vars:
-                    if var.name in self.decl_vars:
-                        if isinstance(test_level, Tainted):
-                            self.decl_vars[var.name] = test_level
-                        elif isinstance(test_level, Sanitized) and isinstance(node_level, Untainted):
-                            self.decl_vars[var.name] = test_level
-            elif isinstance(node, Attribute):
-                pass
-        for node in if_stmnt.orelse:
-            node_level = node.get_analyzed(self)
-            if isinstance(node, Assign):
-                print("node_level in else body {}".format(test_level))
-                for var in node.vars:
-                    if var.name in self.decl_vars:
-                        if isinstance(test_level, Tainted):
-                            self.decl_vars[var.name] = test_level
-                        elif isinstance(test_level, Sanitized) and isinstance(node_level, Untainted):
-                            self.decl_vars[var.name] = test_level
+        self.branch_levels.push(test_level)
+
+        # already updates values with worst level possible
+        self.analyze_branch(test_level, if_stmnt.body)
+        self.analyze_branch(test_level, if_stmnt.orelse)
+
+        self.branch_levels.pop()
 
 
     def analyze_while(self, while_stmnt):
-        test_level = while_stmnt.test[0].get_analyzed(self)
+        test_level = while_stmnt.test.get_analyzed(self)
 
-        for node in while_stmnt.body:
-            node_level = node.get_analyzed(self)
+        self.branch_levels.push(test_level)
+
+        # already updates values with worst level possible
+        self.analyze_branch(test_level, while_stmnt.body)
+
+        self.branch_levels.pop()
+
+    # branch is not a node, but is useful to use this notion to not repeat code,
+    # since logic is the same in if, else or while branches
+    def analyze_branch(self, test_level, body_node):
+        for node in body_node:
+            node_level_if = node.get_analyzed(self)
             if isinstance(node, Assign):
+                #print("node_level after assign in else body {}".format(test_level))
                 for var in node.vars:
-                    if var.name in self.decl_vars:
-                        if isinstance(test_level, Tainted):
-                            self.decl_vars[var.name] = test_level
-                        elif isinstance(test_level, Sanitized) and isinstance(node_level, Untainted):
-                            self.decl_vars[var.name] = test_level
-        for node in while_stmnt.orelse:
-            node_level = node.get_analyzed(self)
-            if isinstance(node, Assign):
-                for var in node.vars:
-                    if var.name in self.decl_vars:
-                        if isinstance(test_level, Tainted):
-                            self.decl_vars[var.name] = test_level
-                        elif isinstance(test_level, Sanitized) and isinstance(node_level, Untainted):
-                            self.decl_vars[var.name] = test_level
+                    self.decl_vars[var.name] = maxLevel(test_level, node_level_if)
 
     def analyze_func(self, func):
         normal_kind = None
@@ -170,13 +155,18 @@ class Analyzer:
         else:
             return Untainted()
 
+    # for simplicity, it is assumed only the assign node can change the values of a variable
     def analyze_attribute(self, attribute):
-        return attribute.value.get_analyzed(self)
+        attr_level = attribute.attr.get_analyzed(self)
+        value_level = attribute.value.get_analyzed(self)
+        return maxLevel(attr_level, value_level)
 
     def analyze_var_expr(self, expr):
         print("analyzing var expr {}".format(expr))
         # check whether variable is declared
+        print("decl_vars {}".format(self.decl_vars))
         if expr.name in self.decl_vars:
+            print("VARIABLE IS DECLARED")
             return self.decl_vars[expr.name]
         else:
             return Tainted(expr.name)

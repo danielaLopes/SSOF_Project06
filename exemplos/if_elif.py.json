@@ -1,0 +1,143 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "If",
+            "body": [
+                {
+                    "_type": "Assign",
+                    "col_offset": 4,
+                    "lineno": 2,
+                    "targets": [
+                        {
+                            "_type": "Name",
+                            "col_offset": 4,
+                            "ctx": {
+                                "_type": "Store"
+                            },
+                            "id": "b",
+                            "lineno": 2
+                        }
+                    ],
+                    "value": {
+                        "_type": "Str",
+                        "col_offset": 8,
+                        "lineno": 2,
+                        "s": "ola"
+                    }
+                }
+            ],
+            "col_offset": 0,
+            "lineno": 1,
+            "orelse": [
+                {
+                    "_type": "If",
+                    "body": [
+                        {
+                            "_type": "Assign",
+                            "col_offset": 4,
+                            "lineno": 4,
+                            "targets": [
+                                {
+                                    "_type": "Name",
+                                    "col_offset": 4,
+                                    "ctx": {
+                                        "_type": "Store"
+                                    },
+                                    "id": "b",
+                                    "lineno": 4
+                                }
+                            ],
+                            "value": {
+                                "_type": "Str",
+                                "col_offset": 8,
+                                "lineno": 4,
+                                "s": "grr"
+                            }
+                        }
+                    ],
+                    "col_offset": 5,
+                    "lineno": 3,
+                    "orelse": [
+                        {
+                            "_type": "Assign",
+                            "col_offset": 4,
+                            "lineno": 6,
+                            "targets": [
+                                {
+                                    "_type": "Name",
+                                    "col_offset": 4,
+                                    "ctx": {
+                                        "_type": "Store"
+                                    },
+                                    "id": "b",
+                                    "lineno": 6
+                                }
+                            ],
+                            "value": {
+                                "_type": "Str",
+                                "col_offset": 8,
+                                "lineno": 6,
+                                "s": "adeus"
+                            }
+                        }
+                    ],
+                    "test": {
+                        "_type": "Compare",
+                        "col_offset": 5,
+                        "comparators": [
+                            {
+                                "_type": "Num",
+                                "col_offset": 9,
+                                "lineno": 3,
+                                "n": 3
+                            }
+                        ],
+                        "left": {
+                            "_type": "Name",
+                            "col_offset": 5,
+                            "ctx": {
+                                "_type": "Load"
+                            },
+                            "id": "a",
+                            "lineno": 3
+                        },
+                        "lineno": 3,
+                        "ops": [
+                            {
+                                "_type": "Gt"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "test": {
+                "_type": "Compare",
+                "col_offset": 3,
+                "comparators": [
+                    {
+                        "_type": "Num",
+                        "col_offset": 7,
+                        "lineno": 1,
+                        "n": 2
+                    }
+                ],
+                "left": {
+                    "_type": "Name",
+                    "col_offset": 3,
+                    "ctx": {
+                        "_type": "Load"
+                    },
+                    "id": "a",
+                    "lineno": 1
+                },
+                "lineno": 1,
+                "ops": [
+                    {
+                        "_type": "Gt"
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,72 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "While",
+            "body": [
+                {
+                    "_type": "If",
+                    "body": [
+                        {
+                            "_type": "Assign",
+                            "col_offset": 8,
+                            "lineno": 4,
+                            "targets": [
+                                {
+                                    "_type": "Name",
+                                    "col_offset": 8,
+                                    "ctx": {
+                                        "_type": "Store"
+                                    },
+                                    "id": "indarg",
+                                    "lineno": 4
+                                }
+                            ],
+                            "value": {
+                                "_type": "BinOp",
+                                "col_offset": 17,
+                                "left": {
+                                    "_type": "Str",
+                                    "col_offset": 17,
+                                    "lineno": 4,
+                                    "s": "adeus"
+                                },
+                                "lineno": 4,
+                                "op": {
+                                    "_type": "Add"
+                                },
+                                "right": {
+                                    "_type": "Str",
+                                    "col_offset": 27,
+                                    "lineno": 4,
+                                    "s": "'"
+                                }
+                            }
+                        }
+                    ],
+                    "col_offset": 4,
+                    "lineno": 3,
+                    "orelse": [],
+                    "test": {
+                        "_type": "Str",
+                        "col_offset": 7,
+                        "lineno": 3,
+                        "s": "ola"
+                    }
+                }
+            ],
+            "col_offset": 0,
+            "lineno": 1,
+            "orelse": [],
+            "test": {
+                "_type": "Name",
+                "col_offset": 6,
+                "ctx": {
+                    "_type": "Load"
+                },
+                "id": "a",
+                "lineno": 1
+            }
+        }
+    ]
+}

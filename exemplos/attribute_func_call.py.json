@@ -1,0 +1,60 @@
+{
+    "_type": "Module",
+    "body": [
+        {
+            "_type": "Assign",
+            "col_offset": 0,
+            "lineno": 1,
+            "targets": [
+                {
+                    "_type": "Name",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Store"
+                    },
+                    "id": "a",
+                    "lineno": 1
+                }
+            ],
+            "value": {
+                "_type": "Name",
+                "col_offset": 2,
+                "ctx": {
+                    "_type": "Load"
+                },
+                "id": "b",
+                "lineno": 1
+            }
+        },
+        {
+            "_type": "Expr",
+            "col_offset": 0,
+            "lineno": 2,
+            "value": {
+                "_type": "Call",
+                "args": [],
+                "col_offset": 0,
+                "func": {
+                    "_type": "Attribute",
+                    "attr": "clean",
+                    "col_offset": 0,
+                    "ctx": {
+                        "_type": "Load"
+                    },
+                    "lineno": 2,
+                    "value": {
+                        "_type": "Name",
+                        "col_offset": 0,
+                        "ctx": {
+                            "_type": "Load"
+                        },
+                        "id": "a",
+                        "lineno": 2
+                    }
+                },
+                "keywords": [],
+                "lineno": 2
+            }
+        }
+    ]
+}
