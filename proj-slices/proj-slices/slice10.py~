@@ -8,3 +8,4 @@ while nis == "":
       indarg = s(indarg,1)
 q=x(query)
 
+# tip: different control paths, via number of loops, might encode or not different vulnerablities.
