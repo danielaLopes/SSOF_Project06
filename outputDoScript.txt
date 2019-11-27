@@ -1,0 +1,84 @@
+
+var levels: {'nis': UNTAINTED, 'query': TAINTED source ['indarg', 'arg3'], 'arg3': TAINTED source ['indarg', 'arg2'], 'arg2': TAINTED source ['indarg', 'arg1'], 'arg1': TAINTED source ['indarg'], 'indarg': TAINTED source ['indarg'], 'q': TAINTED source ['indarg', 'arg3']}
+
+vulnerabilities basic: []
+
+vulnerabilities advanced: []
+
+
+var levels: {'arg': UNTAINTED, 'koneksi': UNTAINTED, 'first': UNTAINTED, 'indarg': TAINTED source ['indarg'], 'u': TAINTED source ['indarg']}
+
+vulnerabilities basic: []
+
+vulnerabilities advanced: []
+
+
+var levels: {'query_string': TAINTED source ['get'], 'from_timestamp': TAINTED source ['get'], 'new_query_string': TAINTED source ['get'], 'stmt': TAINTED source ['get'], 'it': TAINTED source ['get']}
+
+vulnerabilities basic: [{'vulnerability': 'SQL injection', 'sources': ['g', 'e', 't'], 'sink': 'execute', 'sanitizers': []}]
+
+vulnerabilities advanced: [{'vulnerability': 'SQL injection', 'sources': [{'source': 'get', 'sanitizers': []}], 'sink': 'execute'}]
+
+
+var levels: {'nis': UNTAINTED, 'koneksi': UNTAINTED, 'q': UNTAINTED}
+
+vulnerabilities basic: []
+
+vulnerabilities advanced: []
+
+
+var levels: {'nis': UNTAINTED, 'q': TAINTED source ['koneksi']}
+
+vulnerabilities basic: []
+
+vulnerabilities advanced: []
+
+
+var levels: {'koneksi': UNTAINTED, 'idkelas': UNTAINTED, 'com': UNTAINTED, 'show_kelas': UNTAINTED, 'hasil_kelas': UNTAINTED}
+
+vulnerabilities basic: []
+
+vulnerabilities advanced: []
+
+
+var levels: {'nis': UNTAINTED, 'q': TAINTED source ['koneksi'], 'koneksi': TAINTED source ['koneksi']}
+
+vulnerabilities basic: []
+
+vulnerabilities advanced: []
+
+
+var levels: {'nis': UNTAINTED, 'q1': UNTAINTED, 'q2': UNTAINTED, 'query': TAINTED source ['query2'], 'koneksi': UNTAINTED, 'q': TAINTED source ['query2']}
+
+vulnerabilities basic: []
+
+vulnerabilities advanced: []
+
+
+var levels: {}
+
+vulnerabilities basic: []
+
+vulnerabilities advanced: []
+
+
+var levels: {'nis': TAINTED source ['boo'], 'koneksi': UNTAINTED, 'q': TAINTED source ['indarg']}
+
+vulnerabilities basic: []
+
+vulnerabilities advanced: []
+
+
+var levels: {'nis': TAINTED source ['boo'], 'koneksi': UNTAINTED, 'q': TAINTED source ['indarg', 'boo']}
+
+vulnerabilities basic: []
+
+vulnerabilities advanced: []
+
+
+var levels: {'nis': UNTAINTED, 'koneksi': UNTAINTED, 'q': TAINTED source ['indarg'], 'indarg': TAINTED source ['indarg']}
+
+vulnerabilities basic: []
+
+vulnerabilities advanced: []
+
