@@ -130,7 +130,7 @@ class Analyzer:
         kind = kindTuple[0]
         pattern = kindTuple[1]
         if kind == "SOURCE":
-            return Tainted(func_call.func.name)
+            return Tainted([func_call.func.name])
 
         elif kind == "SANITIZER":
             sanitize_sources = []
