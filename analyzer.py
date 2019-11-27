@@ -81,7 +81,6 @@ class Analyzer:
 
         self.branch_levels.pop()
 
-
     def analyze_while(self, while_stmnt):
         test_level = while_stmnt.test.get_analyzed(self)
 
@@ -97,7 +96,6 @@ class Analyzer:
     # branch is not a node, but is useful to use this notion to not repeat code,
     # since logic is the same in if, else or while branches
     def analyze_branch(self, test_level, body_node):
-        #print("BODY NODE {}".format(body_node))
         for node in body_node:
             node_level= node.get_analyzed(self)
             if isinstance(node, Assign):
@@ -159,7 +157,10 @@ class Analyzer:
                         is_sanitized = arg_level
                     for source in arg_level.source:
                         if source not in sources_basic:
-                            sources_basic.extend(source)
+                            if isinstance(source, list):
+                                sources_basic.extend(source)
+                            else:
+                                sources_basic.append(source)
                             sources_advanced.append({'source': source, 'sanitizers': arg_sanitizers})
                     sanitizers.extend(arg_sanitizers)
 

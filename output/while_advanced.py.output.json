@@ -1,0 +1,34 @@
+[
+    {
+        "vulnerability": "SQL injection",
+        "sources": [
+            "get",
+            "get_object_or_404",
+            "ContactMailForm"
+        ],
+        "sink": "execute",
+        "sanitizers": []
+    },
+    {
+        "vulnerability": "SQL injection",
+        "sources": [
+            "get",
+            "get_object_or_404",
+            "ContactMailForm"
+        ],
+        "sink": "raw",
+        "sanitizers": [
+            "escape_string"
+        ]
+    },
+    {
+        "vulnerability": "XSS",
+        "sources": [
+            "get",
+            "get_object_or_404",
+            "ContactMailForm"
+        ],
+        "sink": "Raw",
+        "sanitizers": []
+    }
+]

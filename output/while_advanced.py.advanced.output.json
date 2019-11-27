@@ -1,0 +1,62 @@
+[
+    {
+        "vulnerability": "SQL injection",
+        "sources": [
+            {
+                "source": "get",
+                "sanitizers": []
+            },
+            {
+                "source": "get_object_or_404",
+                "sanitizers": []
+            },
+            {
+                "source": "ContactMailForm",
+                "sanitizers": []
+            }
+        ],
+        "sink": "execute"
+    },
+    {
+        "vulnerability": "SQL injection",
+        "sources": [
+            {
+                "source": "get",
+                "sanitizers": [
+                    "escape_string"
+                ]
+            },
+            {
+                "source": "get_object_or_404",
+                "sanitizers": [
+                    "escape_string"
+                ]
+            },
+            {
+                "source": "ContactMailForm",
+                "sanitizers": [
+                    "escape_string"
+                ]
+            }
+        ],
+        "sink": "raw"
+    },
+    {
+        "vulnerability": "XSS",
+        "sources": [
+            {
+                "source": "get",
+                "sanitizers": []
+            },
+            {
+                "source": "get_object_or_404",
+                "sanitizers": []
+            },
+            {
+                "source": "ContactMailForm",
+                "sanitizers": []
+            }
+        ],
+        "sink": "Raw"
+    }
+]
