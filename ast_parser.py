@@ -40,11 +40,12 @@ class AstParser:
             return self.parse_while(node['body'], node['test'])
 
     def parse_assign(self, targets, value):
-        return Assign(self.parse_targets(targets), self.parse_expr(value))
+        # we only support assign for a varible at a time
+        return Assign(self.parse_expr(targets[0]), self.parse_expr(value))
 
     def parse_if(self, body, orelse, test):
         test_node = self.parse_expr(test)
-        print("test_node IF {}".format(test_node))
+        #print("test_node IF {}".format(test_node))
 
         body_nodes = []
         for dict in body:
@@ -63,12 +64,6 @@ class AstParser:
             body_nodes.append(self.parse_body_node(dict))
 
         return While(body_nodes, test_node)
-
-    def parse_targets(self, targets):
-        targetList = []
-        for target in targets:
-            targetList.append(self.parse_expr(target))
-        return targetList
 
     def parse_expr(self, value):
         if value[self.type_string] == 'Num':
@@ -112,7 +107,7 @@ class AstParser:
         return Attribute(self.parse_var_expr(attr), self.parse_expr(value))
 
     def parse_bin_op(self, left, right):
-        print("parsing bin op left: {}, right: {}".format(left, right))
+        #print("parsing bin op left: {}, right: {}".format(left, right))
         left_node = self.parse_expr(left)
         right_node = self.parse_expr(right)
         return BinOp(left_node, right_node)

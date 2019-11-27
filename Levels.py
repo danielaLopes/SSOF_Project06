@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from utils import *
 
 
 class Sanitized:
@@ -8,7 +9,7 @@ class Sanitized:
         self.source = source
 
     def __repr__(self):
-        return 'SANITIZED sanitizers %s source %s)' % (self.sanitizers, self.source)
+        return 'SANITIZED sanitizers %s source %s' % (self.sanitizers, self.source)
 
     """def get_sanitizers(self, vulnerability):
         if vulnerability in self.sanitizers:
@@ -59,20 +60,30 @@ class Untainted:
 def maxLevel(level1, level2):
     # same levels that are not untainted
     if isinstance(level1, Tainted) and isinstance(level2, Tainted):
-        if level1.source != level2.source:
-            print(level1.source)
-            return Tainted([level1.source, level2.source])
-        else:
-            return Tainted(level1.source)
+        #print("BOTH TAINTED")
+        #print("LEVEL1: {}".format(level1))
+        #print("LEVEL2: {}".format(level2))
+        new_sources = create_copy_of_array(level1.source)
+        for source in level2.source:
+            if source not in new_sources:
+                new_sources.append(source)
+        #print("NEW_SOURCES: {}".format(new_sources))
+        #print("LEVEL1: {}".format(level1))
+        #print("LEVEL2: {}".format(level2))
+        return Tainted(new_sources)
 
     elif isinstance(level1, Sanitized) and isinstance(level2, Sanitized):
-        if level1.source != level2.source:
-            source = [level1.source, level2.source]
+        #print("BOTH SANITIZED")
+        new_sources = create_copy_of_array(level1.source)
+        for source in level2.source:
+            if source not in new_sources:
+                new_sources.append(source)
         sanitizers = level1.sanitizers
-        for sanitizer in sanitizers:
-            if level2.sanitizers not in sanitizers:
+        for sanitizer in level2.sanitizers:
+            if sanitizer not in sanitizers:
+                print("")
                 sanitizers.append(sanitizer)
-        return Sanitized(source, sanitizers)
+        return Sanitized(new_sources, sanitizers)
 
     # different level, but one is worse than the other
     elif isinstance(level1, Tainted) and isinstance(level2, Sanitized) or\

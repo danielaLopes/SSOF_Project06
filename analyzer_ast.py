@@ -27,12 +27,12 @@ class BodyNode(Body):
 
 
 class Assign(BodyNode):
-    def __init__(self, vars, expr):
-        self.vars = vars
+    def __init__(self, var, expr):
+        self.var = var
         self.expr = expr
 
     def __repr__(self):
-        return 'Assign(%s, %s)' % (self.vars, self.expr)
+        return 'Assign(%s, %s)' % (self.var, self.expr)
 
     def get_analyzed(self, analyzer):
         return analyzer.analyze_assign(self)

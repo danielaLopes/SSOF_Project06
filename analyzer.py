@@ -1,5 +1,6 @@
 from analyzer_ast import *
 from Levels import *
+from utils import *
 
 
 class Analyzer:
@@ -27,12 +28,13 @@ class Analyzer:
         return sanitizers_per_vuln
 
     def get_max_nested_branch_levels(self, current_level):
-        print("BRANCH LEVELS: {}".format(self.branch_levels))
+        #print("BRANCH LEVELS: {}".format(self.branch_levels))
         combined_levels = current_level
         if len(self.branch_levels) > 1:
             for i in range(0, len(self.branch_levels)-1):
+                #print("get_max_nested_branch_levels before: {}".format(self.decl_vars))
                 combined_levels = maxLevel(self.branch_levels[i], self.branch_levels[i+1])
-        print("combined levels: {}".format(combined_levels))
+                #print("get_max_nested_branch_levels after: {}".format(self.decl_vars))
         return combined_levels
 
     def add_vulnerability_basic(self, vulnerability, sources, sink, sanitizers):
@@ -56,19 +58,22 @@ class Analyzer:
     def analyze_assign(self, assign):
         #print("analyzing assign {}".format(assign))
         expr_level = assign.expr.get_analyzed(self)
-        for var in assign.vars:
-            if var.name in self.decl_vars:
-                # variable only gets sanitized if it was tainted before
-                if isinstance(expr_level, Sanitized):
-                    expr_level.source = var.name
-                    if isinstance(self.decl_vars[var.name], Tainted):
-                        expr_level.source = self.decl_vars[var.name].source
-                        self.decl_vars[var.name] = expr_level
-                    elif isinstance(self.decl_vars[var.name], Sanitized):
-                        self.decl_vars[var.name].sanitizers.extend(expr_level.sanitizers)
-            else:
-                self.decl_vars[var.name] = expr_level
-        print("expr_level: {} in assign is: {}".format(assign.expr, expr_level))
+        if assign.var.name in self.decl_vars:
+            # variable only gets sanitized if it was tainted before
+            if isinstance(expr_level, Sanitized):
+                var_previous_level = assign.var.get_analyzed(self)
+                # maintains dependecies between several sanitizations with same source
+                if expr_level.source == var_previous_level.source and\
+                        isinstance(var_previous_level, Sanitized):
+                    # extend returns None, so we need an auxiliary list to extend at the beginning
+                    aux_sanitizers = create_copy_of_array(var_previous_level.sanitizers)
+                    aux_sanitizers.extend(expr_level.sanitizers)
+                    expr_level.sanitizers = aux_sanitizers
+
+        #print("analyze_assign before: {}".format(self.decl_vars))
+        self.decl_vars[assign.var.name] = expr_level
+        #print("analyze_assign after: {}".format(self.decl_vars))
+        #print("expr_level: {} in assign is: {}".format(assign.expr, expr_level))
         return expr_level
 
     def analyze_if(self, if_stmnt):
@@ -99,13 +104,12 @@ class Analyzer:
     def analyze_branch(self, test_level, body_node):
         #print("BODY NODE {}".format(body_node))
         for node in body_node:
-            node_level_if = node.get_analyzed(self)
+            node_level= node.get_analyzed(self)
             if isinstance(node, Assign):
-                #print("node_level after assign in else body {}".format(test_level))
-                for var in node.vars:
-                    self.decl_vars[var.name] = maxLevel(test_level, node_level_if)
-                    print("var {} level {} after if flow".format(var, self.decl_vars[var.name]))
-
+                #print("var {} level {} before if flow".format(node.var, self.decl_vars[node.var.name]))
+                self.decl_vars[node.var.name] = maxLevel(test_level, node_level)
+                #print("var {} level {} after if flow".format(node.var, self.decl_vars[node.var.name]))
+        #print("AFTER EACH ANALYZE_BRANCH: {}".format(self.decl_vars))
     def analyze_func(self, func):
         normal_kind = None
         for pattern in self.patterns:
@@ -121,6 +125,7 @@ class Analyzer:
         return normal_kind
 
     def analyze_func_call(self, func_call):
+        #print("FuncCall : {}".format(func_call))
         kindTuple = func_call.func.get_analyzed(self)
         kind = kindTuple[0]
         pattern = kindTuple[1]
@@ -128,13 +133,26 @@ class Analyzer:
             return Tainted(func_call.func.name)
 
         elif kind == "SANITIZER":
-            return Sanitized([func_call.func.name], None)
+            sanitize_sources = []
+            for arg in func_call.args:
+                arg_level = arg.get_analyzed(self)
+                #print("SANITIZ function: {} arg: {}, level: {}".format(func_call, arg, arg_level))
+                if isinstance(arg_level, Tainted) or isinstance(arg_level, Sanitized):
+                    sanitize_sources.extend(arg_level.source)
+                    #print("SANITIZED_SOURCES: {}".format(sanitize_sources))
+            # if there was sanitiziation of atleast one not untainted argument
+            if len(sanitize_sources) > 0:
+                return Sanitized([func_call.func.name], sanitize_sources)
+            # if there was nothing to sanitize, then it's untainted
+            else:
+                return Untainted()
 
         else:
             sanitizers = []
             sources_basic = []
             sources_advanced = []
             is_tainted = None
+            is_sanitized = None
 
             for arg in func_call.args:
                 arg_level = arg.get_analyzed(self)
@@ -147,24 +165,25 @@ class Analyzer:
                 if not isinstance(arg_level, Untainted):
                     if isinstance(arg_level, Tainted):
                         is_tainted = arg_level
-                    if isinstance(arg, VarExpr):
-                        sources_advanced.append({'source of '+arg.name: arg_level.source, 'sanitizers': arg_sanitizers})
-                    elif isinstance(arg, FuncCall):
-                        sources_advanced.append({'source of '+arg.func.name: arg_level.source, 'sanitizers': arg_sanitizers})
+                    elif isinstance(arg_level, Sanitized):
+                        is_sanitized = arg_level
                     if arg_level.source not in sources_basic:
                         sources_basic.append(arg_level.source)
+                        sources_advanced.append({'source': arg_level.source, 'sanitizers': arg_sanitizers})
                     sanitizers.extend(arg_sanitizers)
 
+            #print("is_tainted: {}, len(sanitizers): {}".format(is_tainted, len(sanitizers)))
             # only signals vulnerability if the sink has arguments that may cause a vulnerability
-            if kind == "SINK" and (is_tainted or len(sanitizers) > 0):
+            if kind == "SINK" and (is_tainted or is_sanitized):
                 self.add_vulnerability_basic(pattern.vulnerability, sources_basic, func_call.func.name, sanitizers)
                 self.add_vulnerability_advanced(pattern.vulnerability, sources_advanced, func_call.func.name)
 
         if is_tainted:
             return is_tainted
-        # sources_basic and sources_advanced are going to have the same size
+        # if it's not tainted, then it can only be Sanitized or Untainted
+        # but if it's Untainted it wouldn't have sources, so it's Sanitized
         elif len(sources_basic) > 0:
-            return Sanitized(sanitizers, None)
+            return Sanitized(sanitizers, sources_basic)
         else:
             return Untainted()
 
@@ -179,10 +198,9 @@ class Analyzer:
         # check whether variable is declared
         #print("decl_vars {}".format(self.decl_vars))
         if expr.name in self.decl_vars:
-            #print("VARIABLE IS DECLARED")
             return self.decl_vars[expr.name]
         else:
-            return Tainted(expr.name)
+            return Tainted([expr.name])
 
     def analyze_num_expr(self, expr):
         return Untainted()
