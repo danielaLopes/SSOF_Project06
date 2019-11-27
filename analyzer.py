@@ -157,7 +157,10 @@ class Analyzer:
                         is_sanitized = arg_level
                     for source in arg_level.source:
                         if source not in sources_basic:
-                            sources_basic.extend(source)
+                            if isinstance(source, list):
+                                sources_basic.extend(source)
+                            else:
+                                sources_basic.append(source)
                             sources_advanced.append({'source': source, 'sanitizers': arg_sanitizers})
                     sanitizers.extend(arg_sanitizers)
 
