@@ -25,7 +25,7 @@ def parse(json_pattern_file):
 					e.sinks = e.sinks + list(set(json_pattern['sinks']) - set(e.sinks))
 					add = False
 		if(add):	
-			pattern = Pattern(json_pattern['vulnerability'],json_pattern['sources'],json_pattern['sanitizers'],json_pattern['sinks'])
+			pattern = Pattern(json_pattern['vulnerability'], json_pattern['sources'], json_pattern['sanitizers'],json_pattern['sinks'])
 			pattern_list.append(pattern)
 
 	return pattern_list

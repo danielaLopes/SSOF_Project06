@@ -31,10 +31,6 @@ class AstParser:
         elif node[self.type_string] == 'Expr':
             return self.parse_expr(node['value'])
         elif node[self.type_string] == 'If':
-            """print("BODY {}".format(node['body']))
-            print("ORELSE {}".format(node['orelse']))
-            print("TEST {}".format(node['test']))
-            print("NODE {}".format(node))"""
             return self.parse_if(node['body'], node['orelse'], node['test'])
         elif node[self.type_string] == 'While':
             return self.parse_while(node['body'], node['test'])
@@ -45,7 +41,6 @@ class AstParser:
 
     def parse_if(self, body, orelse, test):
         test_node = self.parse_expr(test)
-        #print("test_node IF {}".format(test_node))
 
         body_nodes = []
         for dict in body:
@@ -94,7 +89,6 @@ class AstParser:
 
     def parse_func_call(self, args, func):
         argList = []
-       # print("parsing func call {}".format(func))
         for arg in args:
             argList.append(self.parse_expr(arg))
         # distinguish cases where func is an attribute
@@ -107,7 +101,6 @@ class AstParser:
         return Attribute(self.parse_var_expr(attr), self.parse_expr(value))
 
     def parse_bin_op(self, left, right):
-        #print("parsing bin op left: {}, right: {}".format(left, right))
         left_node = self.parse_expr(left)
         right_node = self.parse_expr(right)
         return BinOp(left_node, right_node)

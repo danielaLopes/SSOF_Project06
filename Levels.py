@@ -60,20 +60,13 @@ class Untainted:
 def maxLevel(level1, level2):
     # same levels that are not untainted
     if isinstance(level1, Tainted) and isinstance(level2, Tainted):
-        #print("BOTH TAINTED")
-        #print("LEVEL1: {}".format(level1))
-        #print("LEVEL2: {}".format(level2))
         new_sources = create_copy_of_array(level1.source)
         for source in level2.source:
             if source not in new_sources:
                 new_sources.append(source)
-        #print("NEW_SOURCES: {}".format(new_sources))
-        #print("LEVEL1: {}".format(level1))
-        #print("LEVEL2: {}".format(level2))
         return Tainted(new_sources)
 
     elif isinstance(level1, Sanitized) and isinstance(level2, Sanitized):
-        #print("BOTH SANITIZED")
         new_sources = create_copy_of_array(level1.source)
         for source in level2.source:
             if source not in new_sources:
