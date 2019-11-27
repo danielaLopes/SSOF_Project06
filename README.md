@@ -11,5 +11,5 @@
 
 - Extra:
 	- We made a script test.sh to test all the slices in 'slices/proj-slices/' with the given patterns file 'patterns/patterns.json'.
-	- We also made new slices for testing in the 'exemplos/' directory.
+	- We also made new slices for testing in the 'exemplos/' and 'git_examples/' directories.
 	- Also, in the 'patterns/' directory there is a file called 'patterns_BONUS.json' and it contains patterns of Path Traversal and Command Injection web vulnerabilities created by us.
