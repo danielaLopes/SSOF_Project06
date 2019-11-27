@@ -89,6 +89,8 @@ class Analyzer:
 
         # already updates values with worst level possible
         self.analyze_branch(test_level, while_stmnt.body)
+        # analyzes twice because while's body can be executed more than once
+        self.analyze_branch(test_level, while_stmnt.body)
 
         self.branch_levels.pop()
 

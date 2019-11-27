@@ -71,10 +71,9 @@ def maxLevel(level1, level2):
         for source in level2.source:
             if source not in new_sources:
                 new_sources.append(source)
-        sanitizers = level1.sanitizers
+        sanitizers = create_copy_of_array(level1.sanitizers)
         for sanitizer in level2.sanitizers:
             if sanitizer not in sanitizers:
-                print("")
                 sanitizers.append(sanitizer)
         return Sanitized(new_sources, sanitizers)
 
