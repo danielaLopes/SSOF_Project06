@@ -2,12 +2,7 @@
     {
         "vulnerability": "SQL injection",
         "sources": [
-            "i",
-            "n",
-            "d",
-            "a",
-            "r",
-            "g"
+            "indarg"
         ],
         "sink": "z",
         "sanitizers": []

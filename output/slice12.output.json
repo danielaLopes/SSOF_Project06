@@ -2,9 +2,7 @@
     {
         "vulnerability": "SQL injection",
         "sources": [
-            "g",
-            "e",
-            "t"
+            "get"
         ],
         "sink": "execute",
         "sanitizers": []
