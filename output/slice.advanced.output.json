@@ -3,7 +3,7 @@
         "vulnerability": "SQL injection",
         "sources": [
             {
-                "source": "c",
+                "source": "request",
                 "sanitizers": []
             }
         ],
